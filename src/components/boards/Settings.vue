@@ -3,6 +3,13 @@ b-modal(ref="modal", title="Settings", @ok="save", ok-title="Save")
   .form-group
     label Board Name
     input.form-control(v-model="name")
+    hr.mt-3.mb-3
+    .row
+      .col-8
+        p.mb-0 Delete this board
+        small You cannot undo this action.
+      .col-4.text-right
+        b-button(variant="danger", @click="emitDelete") Delete
 </template>
 
 <script>
@@ -31,6 +38,9 @@ export default {
         db.boards.put(board)
         this.$emit('updateName', this.name)
       }
+    },
+    emitDelete () {
+      this.$emit('delete')
     }
   }
 }

@@ -2,8 +2,10 @@ import Dexie from 'dexie'
 import BlockstackDB from './blockstack-db'
 import BlockstackDexie from './blockstack-db/dexie'
 
+const exportFilename = 'KanStackDB.json'
+
 const db = new Dexie('kanstack', {
-  addons: [ BlockstackDexie('KanStackDB.json') ]
+  addons: [ BlockstackDexie(exportFilename) ]
 })
 
 db.version(1).stores({
@@ -16,7 +18,7 @@ db.version(2).stores({
 })
 
 db.open().then(() => {
-  db.blockstack = new BlockstackDB(db.backendDB(), 'KanStackDB.json')
+  db.blockstack = new BlockstackDB(db.backendDB(), exportFilename)
   // Dexie.addons.push()
 })
 

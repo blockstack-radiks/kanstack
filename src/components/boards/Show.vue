@@ -1,20 +1,20 @@
 <template lang="jade">
-.container-fluid.mt-3
+.container-fluid.pt-3.h-100
   div(v-if="loading")
     .row
       .col-12.text-center.mb-3(v-if="loading")
         h1.mb-3
           font-awesome-icon(:icon="spinnerIcon" pulse)
         h1 Loading ...
-  div(v-else)
-    Settings(ref="settings", :board="board", @updateName="updateName")
+  div.h-100(v-else)
+    Settings(ref="settings", :board="board", @updateName="updateName", @delete="deleteBoard")
     .row
       .col-12
         h3
           {{ board.name }}
           .float-right
             font-awesome-icon.float-right.pointer(:icon="cogsIcon", @click="showSettings")
-    .list-row-container
+    .list-row-container.h-100
       .list-row(:style="{ width: listsWidth() }")
         .list(v-for="list in lists")
           .list-inner
@@ -27,7 +27,7 @@
               font-awesome-icon.ml-2.list-name-edit.d-none.text-danger.float-right(:icon="trashIcon", @click="deleteList(list)")
             .mt-3
             vuedraggable.draggable(v-model="list.cards", :options="{group: 'cards'}", @change="(evt) => { onSort(list, evt) }")
-              .list-card.mb-3(v-for="card in list.cards")
+              div(v-for="card in list.cards")
                 card(:card="card")
             div(v-if="list.addingCard")
               input.form-control.mb-3(v-model="list.newCardName", placeholder="Name")
@@ -176,6 +176,11 @@ export default {
     },
     updateName (name) {
       this.board.name = name
+    },
+    async deleteBoard () {
+      await db.boards.delete(this.board.id)
+      db.blockstack.export()
+      this.$router.push('/')
     }
   }
 }
