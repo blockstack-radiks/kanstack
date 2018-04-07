@@ -71,7 +71,7 @@ export default {
     Settings
   },
   async mounted () {
-    this.board = await db.boards.get(parseInt(this.$route.params.id))
+    this.board = await db.boards.getEncrypted(parseInt(this.$route.params.id))
     this.setBodyStyle()
     this.fetchLists()
   },
@@ -131,7 +131,7 @@ export default {
     saveList (list) {
       list.editing = false
       this.$forceUpdate()
-      db.lists.putAndExport(list)
+      db.lists.putEncrypted(list)
     },
     newCard (list) {
       list.addingCard = true
@@ -146,7 +146,7 @@ export default {
       }
       list.cards.push(card)
       this.$forceUpdate()
-      card.id = await db.cards.putAndExport(card)
+      card.id = await db.cards.putEncrypted(card)
     },
     listsWidth () {
       return `${(this.lists.length + 1) * 320}px`
@@ -162,22 +162,20 @@ export default {
       await this.fetchCards()
     },
     updateCardsOrder (list) {
-      console.log('updating list', list)
-      return new Promise((resolve, reject) => {
+      return new Promise(async (resolve, reject) => {
         for (let index = 0; index < list.cards.length; index++) {
           const card = list.cards[index]
           card.order = index
         }
-        db.cards.bulkPut(list.cards)
+        await db.cards.bulkPutEncrypted(list.cards)
         resolve()
       })
     },
     async onSort (list, event) {
-      console.log(list, event)
       if (event.added) {
         const card = event.added.element
         card.listId = list.id
-        await db.cards.putAndExport(card)
+        await db.cards.putEncrypted(card)
         await this.updateCardsOrder(list)
       } else if (event.removed) {
 
@@ -185,7 +183,6 @@ export default {
         await this.updateCardsOrder(list)
       }
       this.$forceUpdate()
-      console.log(list, event)
     },
     showSettings () {
       this.$refs.settings.show()
@@ -202,7 +199,7 @@ export default {
     },
     changeColor (color) {
       this.board.color = color
-      db.boards.putAndExport(this.board)
+      db.boards.putEncrypted(this.board)
       this.setBodyStyle()
     },
     setBodyStyle () {

@@ -40,7 +40,7 @@ export default {
       if (this.name !== this.board.name) {
         const { board } = this
         board.name = this.name
-        db.boards.putAndExport(board)
+        db.boards.putEncrypted(board)
         this.$emit('updateName', this.name)
       }
     },

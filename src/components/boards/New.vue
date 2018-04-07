@@ -25,9 +25,7 @@ export default {
   },
   methods: {
     async save () {
-      console.log(this.name)
-      console.log(db)
-      const boardId = await db.boards.putAndExport({
+      const boardId = await db.boards.putEncrypted({
         name: this.name
       })
       this.$router.push({name: 'boards_show', params: { id: boardId }})

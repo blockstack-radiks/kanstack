@@ -17,6 +17,10 @@ db.version(2).stores({
   cards: '++id, listId'
 })
 
+db.version(3).stores({
+  test: '++id, indexable'
+})
+
 db.blockstackImport = () => {
   return new Promise(async (resolve, reject) => {
     await db.open()

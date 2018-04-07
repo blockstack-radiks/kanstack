@@ -49,7 +49,6 @@ export default {
     } else if (blockstack.isSignInPending()) {
       blockstack.handlePendingSignIn()
       .then((userData) => {
-        console.log(userData)
         window.location = window.location.origin
       })
     }

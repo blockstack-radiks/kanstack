@@ -77,7 +77,7 @@ export default {
     },
     save () {
       this.$nextTick(() => {
-        db.cards.putAndExport(this.card)
+        db.cards.putEncrypted(this.card)
         this.$forceUpdate()
       })
     },
@@ -111,7 +111,6 @@ export default {
       return completed
     },
     deleteTask (index) {
-      console.log(index)
       this.card.tasks.splice(index, 1)
       this.save()
     },

@@ -15,7 +15,7 @@ const { boardColor } = helpers
 
 export default {
   async mounted () {
-    this.boards = await db.boards.toArray()
+    this.boards = await db.boards.toDecryptedArray()
   },
   data () {
     return {
