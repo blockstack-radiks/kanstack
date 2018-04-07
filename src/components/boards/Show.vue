@@ -76,6 +76,7 @@ export default {
     this.fetchLists()
   },
   beforeDestroy () {
+    document.querySelector('nav').style.backgroundColor = null
     document.body.style.backgroundColor = null
   },
   data () {
@@ -97,13 +98,14 @@ export default {
       this.addingNewList = true
     },
     async saveNewList () {
-      await db.lists.add({name: this.newListName, boardId: this.board.id})
+      const list = { name: this.newListName, boardId: this.board.id }
+      list.id = await db.lists.putEncrypted(list)
       this.addingNewList = false
       this.newListName = ''
-      this.fetchLists()
+      this.lists.push(list)
     },
     async fetchLists () {
-      this.lists = await db.lists.where('boardId').equals(this.board.id).toArray()
+      this.lists = await db.lists.where('boardId').equals(this.board.id).toDecryptedArray()
       await this.fetchCards()
       this.loading = false
       this.$forceUpdate()
@@ -114,7 +116,7 @@ export default {
       }
       return new Promise((resolve, reject) => {
         _.each(this.lists, async (list, index, lists) => {
-          const cards = await db.cards.where('listId').equals(list.id).toArray()
+          const cards = await db.cards.where('listId').equals(list.id).toDecryptedArray()
           list.cards = _.sortBy(cards, (card) => {
             return card.order
           })
@@ -203,6 +205,7 @@ export default {
       this.setBodyStyle()
     },
     setBodyStyle () {
+      document.querySelector('nav').style.setProperty('background-color', boardColor(this.board, 0.5), 'important')
       document.body.style.backgroundColor = boardColor(this.board, 0.25)
     },
     cancelAddingCard (list) {
@@ -225,8 +228,8 @@ export default {
   position: relative
   border: 1px solid rgba(0, 0, 0, 0.125)
   border-radius: 0.25rem
-  background-color: #f7f7f7
-  box-shadow: 0 0 8px #868686
+  background-color: #efefef
+  box-shadow: 0 0 1px #868686
 
   .list-inner
     width: 100%
