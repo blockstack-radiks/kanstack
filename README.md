@@ -9,7 +9,7 @@
 # previously we used yarn install. This is no longer supported.
 npm install
 
-# serve with hot reload at localhost:8080
+# serve with hot reload at localhost:8000
 npm run dev
 
 # build for production with minification
@@ -68,7 +68,7 @@ Choose the default storage option to get started quickly.
 
 > You will see the balance in your browser wallet and can use that to purchase names.
 
-After that, make sure you have started your `blockstack-todo` application with the dev instructions in the first section. Open [`locahost:8080`](http://localhost:8080) and click the `Login` button. You will be redirected to a site on `blockstack.org` with a long auth string on the end:
+After that, make sure you have started your `blockstack-todo` application with the dev instructions in the first section. Open [`locahost:8000`](http://localhost:8000) and click the `Login` button. You will be redirected to a site on `blockstack.org` with a long auth string on the end:
 
 ```
 https://blockstack.org/auth?authRequest=eyJ0eXAiOiJKV1QiLCJhbGciOi...

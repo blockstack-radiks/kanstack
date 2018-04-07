@@ -28,6 +28,7 @@
     "vue": "^2.3.3",
     "vue-router": "^3.0.1",
     "vuedraggable": "^2.16.0",
+    "vuejs-dialog": "^0.9.0",
     "yarn": "^1.5.1"
   },
   "devDependencies": {

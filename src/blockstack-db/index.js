@@ -6,7 +6,7 @@ export default class BlockstackDB {
     this.filename = filename
   }
 
-  async export () {
+  export () {
     return new Promise(async (resolve, reject) => {
       const data = await this.createExportData()
       await blockstack.putFile(this.filename, JSON.stringify(data), { encrypt: true })
@@ -14,7 +14,49 @@ export default class BlockstackDB {
     })
   }
 
-  async import () {
+  import () {
+    const { db } = this
+    return new Promise(async (resolve, reject) => {
+      const data = await this.fetchImportData()
+      if (!data || Object.keys(data).length === 0) {
+        return resolve()
+      }
+      const transaction = db.transaction(db.objectStoreNames, 'readwrite')
+
+      transaction.onerror = (event) => {
+        reject(event)
+      }
+
+      for (const storeIndex in db.objectStoreNames) {
+        if (!db.objectStoreNames.hasOwnProperty(storeIndex)) {
+          continue
+        }
+        const store = db.objectStoreNames[storeIndex]
+        let addedCount = 0
+        if (!data[store] || data[store].length === 0) {
+          delete data[store]
+          if (Object.keys(data).length === 0) {
+            resolve()
+          }
+          continue
+        }
+        for (const object of data[store]) {
+          const request = transaction.objectStore(store).put(object)
+          request.onsuccess = (event) => {
+            addedCount += 1
+            if (addedCount === data[store].length) {
+              delete data[store]
+              if (Object.keys(data).length === 0) {
+                resolve()
+              }
+            }
+          }
+        }
+      }
+    })
+  }
+
+  fetchImportData () {
     return new Promise(async (resolve, reject) => {
       const json = await blockstack.getFile(this.filename, { decrypt: true })
       const data = JSON.parse(json)

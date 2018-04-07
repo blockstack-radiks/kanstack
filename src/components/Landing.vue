@@ -4,9 +4,9 @@
     h1 Blockstack Kanban
     p
       | A decentralized Kanban board built on
-      a(href="https://blockstack.org", target="_blank") Blockstack
+      a(href="https://blockstack.org", target="_blank")  Blockstack
       |.
-    button.btn.btn-default(@click.prevent="signIn") Sign In with Blockstack
+    button.btn.btn-secondary(@click.prevent="signIn") Sign In with Blockstack
 </template>
 
 <script>

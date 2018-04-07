@@ -17,9 +17,13 @@ db.version(2).stores({
   cards: '++id, listId'
 })
 
-db.open().then(() => {
-  db.blockstack = new BlockstackDB(db.backendDB(), exportFilename)
-  // Dexie.addons.push()
-})
+db.blockstackImport = () => {
+  return new Promise(async (resolve, reject) => {
+    await db.open()
+    db.blockstack = new BlockstackDB(db.backendDB(), exportFilename)
+    await db.blockstack.import()
+    resolve()
+  })
+}
 
 export default db

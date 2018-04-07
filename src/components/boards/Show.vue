@@ -1,5 +1,5 @@
 <template lang="jade">
-.container-fluid.pt-3.h-100
+.container-fluid.pt-3.h-100.pr-0
   div(v-if="loading")
     .row
       .col-12.text-center.mb-3(v-if="loading")
@@ -7,10 +7,10 @@
           font-awesome-icon(:icon="spinnerIcon" pulse)
         h1 Loading ...
   div.h-100(v-else)
-    Settings(ref="settings", :board="board", @updateName="updateName", @delete="deleteBoard")
+    Settings(ref="settings", :board="board", @updateName="updateName", @delete="deleteBoard", :colors="colors", @changeColor="changeColor")
     .row
       .col-12
-        h3
+        h3.pl-3.pr-3
           {{ board.name }}
           .float-right
             font-awesome-icon.float-right.pointer(:icon="cogsIcon", @click="showSettings")
@@ -18,9 +18,9 @@
       .list-row(:style="{ width: listsWidth() }")
         .list(v-for="list in lists")
           .list-inner
-            div(v-if="list.editing")
+            b-form(v-if="list.editing", @submit="saveList(list)")
               input.form-control.mb-3(v-model="list.name")
-              b-button(:block="true", variant="outline-primary", @click="saveList(list)") Save
+              b-button(:block="true", variant="outline-primary", type="submit") Save
             h5(v-else)
               {{ list.name }}
               font-awesome-icon.ml-2.list-name-edit.d-none(:icon="pencilIcon", @click="editList(list)")
@@ -28,18 +28,20 @@
             .mt-3
             vuedraggable.draggable(v-model="list.cards", :options="{group: 'cards'}", @change="(evt) => { onSort(list, evt) }")
               div(v-for="card in list.cards")
-                card(:card="card")
+                card(:card="card", @deleteCard="deleteCard")
             div(v-if="list.addingCard")
-              input.form-control.mb-3(v-model="list.newCardName", placeholder="Name")
-              b-button(:block="true", variant="outline-primary", @click="saveNewCard(list)") Save
+              b-form(@submit="saveNewCard(list)")
+                input.form-control.mb-3(v-model="list.newCardName", placeholder="Name", @keyup.esc="cancelAddingCard(list)")
+                b-button(:block="true", variant="outline-primary", type="submit") Save
             div(v-else)
               b-button(:block="true", variant="outline-secondary", @click="newCard(list)") Add Card
 
         .list.new-list-card
           .list-inner
             div(v-if="addingNewList")
-              input.form-control.mb-3(placeholder="List Name", v-model="newListName")
-              b-button(:block="true", variant="outline-primary", @click="saveNewList") Save
+              b-form(@submit="saveNewList")
+                input.form-control.mb-3(placeholder="List Name", v-model="newListName", autofocus, @keyup.esc="() => { addingNewList = false }")
+                b-button(:block="true", variant="outline-primary", type="submit") Save
             div(v-else)
               b-button(:block="true", variant="outline-primary", @click="newList") Add a List
 
@@ -58,6 +60,8 @@ import _ from 'underscore'
 import db from '../../db'
 import Card from '../card'
 import Settings from './settings'
+import helpers from '../../helpers'
+const { boardColor, colors } = helpers
 
 export default {
   components: {
@@ -68,7 +72,11 @@ export default {
   },
   async mounted () {
     this.board = await db.boards.get(parseInt(this.$route.params.id))
+    this.setBodyStyle()
     this.fetchLists()
+  },
+  beforeDestroy () {
+    document.body.style.backgroundColor = null
   },
   data () {
     return {
@@ -80,7 +88,8 @@ export default {
       newListName: '',
       spinnerIcon,
       trashIcon,
-      cogsIcon
+      cogsIcon,
+      colors
     }
   },
   methods: {
@@ -97,6 +106,7 @@ export default {
       this.lists = await db.lists.where('boardId').equals(this.board.id).toArray()
       await this.fetchCards()
       this.loading = false
+      this.$forceUpdate()
     },
     async fetchCards () {
       if (this.lists.length === 0) {
@@ -104,7 +114,8 @@ export default {
       }
       return new Promise((resolve, reject) => {
         _.each(this.lists, async (list, index, lists) => {
-          list.cards = _.sortBy(await db.cards.where('listId').equals(list.id).toArray(), (card) => {
+          const cards = await db.cards.where('listId').equals(list.id).toArray()
+          list.cards = _.sortBy(cards, (card) => {
             return card.order
           })
           if (index === lists.length - 1) {
@@ -141,8 +152,14 @@ export default {
       return `${(this.lists.length + 1) * 320}px`
     },
     deleteList (list) {
-      db.lists.delete(list.id)
-      this.fetchLists()
+      this.$dialog.confirm('Are you sure you want to delete this list?').then(() => {
+        db.lists.delete(list.id)
+        this.fetchLists()
+      })
+    },
+    async deleteCard (card) {
+      await db.cards.delete(card.id)
+      await this.fetchCards()
     },
     updateCardsOrder (list) {
       console.log('updating list', list)
@@ -171,16 +188,28 @@ export default {
       console.log(list, event)
     },
     showSettings () {
-      console.log('settings')
       this.$refs.settings.show()
     },
     updateName (name) {
       this.board.name = name
     },
     async deleteBoard () {
-      await db.boards.delete(this.board.id)
-      db.blockstack.export()
-      this.$router.push('/')
+      this.$dialog.confirm('Are you sure you want to delete this board? All items will be lost.').then(async () => {
+        await db.boards.delete(this.board.id)
+        db.blockstack.export()
+        this.$router.push('/')
+      })
+    },
+    changeColor (color) {
+      this.board.color = color
+      db.boards.putAndExport(this.board)
+      this.setBodyStyle()
+    },
+    setBodyStyle () {
+      document.body.style.backgroundColor = boardColor(this.board, 0.25)
+    },
+    cancelAddingCard (list) {
+      list.addingCard = false
     }
   }
 }
@@ -189,7 +218,8 @@ export default {
 <style lang="sass">
 .list-row-container
   overflow-x: scroll
-  padding-bottom: 200px
+  // padding-bottom: 100px
+  padding-left: 5px
 
 .list
   width: 300px
@@ -198,6 +228,8 @@ export default {
   position: relative
   border: 1px solid rgba(0, 0, 0, 0.125)
   border-radius: 0.25rem
+  background-color: #f7f7f7
+  box-shadow: 0 0 8px #868686
 
   .list-inner
     width: 100%
@@ -216,6 +248,7 @@ export default {
   border-radius: 0.25rem
   padding: 10px
   cursor: pointer
+  background-color: white
   p
     margin: 0
 

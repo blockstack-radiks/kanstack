@@ -3,6 +3,10 @@ b-modal(ref="modal", title="Settings", @ok="save", ok-title="Save")
   .form-group
     label Board Name
     input.form-control(v-model="name")
+    .mt-3
+    p Background Color
+    div.color-container(v-for="color in colors")
+      .color(:style="{ backgroundColor: color }", @click="setColor(color)")
     hr.mt-3.mb-3
     .row
       .col-8
@@ -17,7 +21,8 @@ import db from '../../db'
 
 export default {
   props: [
-    'board'
+    'board',
+    'colors'
   ],
   data () {
     return {
@@ -35,17 +40,27 @@ export default {
       if (this.name !== this.board.name) {
         const { board } = this
         board.name = this.name
-        db.boards.put(board)
+        db.boards.putAndExport(board)
         this.$emit('updateName', this.name)
       }
     },
     emitDelete () {
       this.$emit('delete')
+    },
+    setColor (color) {
+      this.$emit('changeColor', color)
     }
   }
 }
 </script>
 
 <style lang="sass" scoped>
-
+.color-container
+  display: inline-block
+  margin-right: 5px
+  cursor: pointer
+  .color
+    width: 30px
+    height: 30px
+    border-radius: 2px
 </style>

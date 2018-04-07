@@ -4,15 +4,17 @@ import Vue from 'vue'
 import BootstrapVue from 'bootstrap-vue'
 import VueRouter from 'vue-router'
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
+import VueDialog from 'vuejs-dialog'
 
 Vue.use(VueRouter)
 Vue.use(BootstrapVue)
 Vue.use(FontAwesomeIcon)
+Vue.use(VueDialog)
 
 import './assets/sass/_variables.scss'
 import './assets/sass/app.scss'
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
+// import 'bootstrap/dist/css/bootstrap.css'
+// import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import db from './db'
 
@@ -42,3 +44,4 @@ new Vue({
   router: router,
   components: { App }
 })
+

@@ -5,12 +5,13 @@
     .col-md-6.col-xs-12
       .card
         .card-body
-          h4 Make a new board
-          .form-group.mt-3
-            label Name
-            input.form-control(v-model="name", placeholder="Give it a cool name")
-          .mt-3
-          b-button(size="lg", :block="true", @click="save", variant="primary") Save
+          b-form(@submit="save")
+            h4 Make a new board
+            .form-group.mt-3
+              label Name
+              input.form-control(v-model="name", placeholder="Give it a cool name")
+            .mt-3
+            b-button(size="lg", :block="true", type="submit", variant="primary") Save
 </template>
 
 <script>
@@ -26,7 +27,7 @@ export default {
     async save () {
       console.log(this.name)
       console.log(db)
-      const boardId = await db.boards.add({
+      const boardId = await db.boards.putAndExport({
         name: this.name
       })
       this.$router.push({name: 'boards_show', params: { id: boardId }})
