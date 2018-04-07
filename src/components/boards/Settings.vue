@@ -1,5 +1,5 @@
 <template lang="jade">
-b-modal(ref="modal", title="Settings", @ok="save")
+b-modal(ref="modal", title="Settings", @ok="save", ok-title="Save")
   .form-group
     label Board Name
     input.form-control(v-model="name")

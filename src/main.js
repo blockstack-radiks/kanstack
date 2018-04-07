@@ -14,6 +14,10 @@ import './assets/sass/app.scss'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
+import db from './db'
+
+window.db = db
+
 import App from './App'
 import NewBoard from './components/boards/New.vue'
 import BoardsIndex from './components/boards/Index.vue'

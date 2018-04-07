@@ -99,7 +99,6 @@ export default {
       this.loading = false
     },
     async fetchCards () {
-      console.log('fetching')
       if (this.lists.length === 0) {
         return true
       }
@@ -121,22 +120,22 @@ export default {
     saveList (list) {
       list.editing = false
       this.$forceUpdate()
-      db.lists.put(list)
+      db.lists.putAndExport(list)
     },
     newCard (list) {
       list.addingCard = true
       list.newCardName = ''
       this.$forceUpdate()
     },
-    saveNewCard (list) {
+    async saveNewCard (list) {
       list.addingCard = false
       const card = {
         name: list.newCardName,
         listId: list.id
       }
-      card.id = db.cards.put(card)
       list.cards.push(card)
       this.$forceUpdate()
+      card.id = await db.cards.putAndExport(card)
     },
     listsWidth () {
       return `${(this.lists.length + 1) * 320}px`
@@ -161,7 +160,7 @@ export default {
       if (event.added) {
         const card = event.added.element
         card.listId = list.id
-        await db.cards.put(card)
+        await db.cards.putAndExport(card)
         await this.updateCardsOrder(list)
       } else if (event.removed) {
 
