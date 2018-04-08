@@ -17,7 +17,7 @@
     .list-row-container.h-100
       .list-row(:style="{ width: listsWidth() }")
         .list(v-for="list in lists", :key="list.id")
-          list(:list="list")
+          list(:list="list", @delete="deleteList(list)")
         .list.new-list-card
           .list-inner
             div(v-if="addingNewList")

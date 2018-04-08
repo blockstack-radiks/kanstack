@@ -125,6 +125,9 @@ export default {
     onCardChoose (event) {
       console.log('choose')
       this.dragging = true
+    },
+    deleteList () {
+      this.$emit('delete')
     }
   }
 }

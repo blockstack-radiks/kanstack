@@ -93,6 +93,9 @@ await db.todos.bulkPutAndExport([
     completed: true
   }
 ])
+
+// make sure to export after delete
+await db.todos.deleteAndExport(taskId)
 ~~~
 
 ---
