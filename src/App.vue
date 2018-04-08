@@ -2,7 +2,7 @@
 #app
   landing(v-if='!user')
   div(v-if="user")
-    b-navbar(toggleable="md", type="dark", variant="dark")
+    b-navbar(toggleable="md", type="light", variant="light")
       b-navbar-toggle(target="nav_collapse")
       b-navbar-brand(to="/") KanStack
       b-collapse(is-nav, id="nav_collapse")
@@ -12,13 +12,13 @@
           b-nav-item-dropdown(right, :text="user.username")
             b-dropdown-item(href="javascript:;", @click="signOut") Sign Out
           <img :src="user.avatarUrl() ? user.avatarUrl() : '/avatar-placeholder.png'" class="img-fluid rounded-circle avatar mt-1">
-  div(v-if="importing")
+  div(v-if="user && importing")
     .row.mt-3
       .col-12.text-center.mt-3
         h1.mb-3
           font-awesome-icon(:icon="spinnerIcon" pulse)
         h1 Loading ...
-  div.h-100(v-else)
+  div.h-100(v-if="user && !importing")
     router-view
     //- small.creds
     //-   | Source code on
@@ -42,14 +42,12 @@ export default {
   async mounted () {
     if (blockstack.isUserSignedIn()) {
       this.userData = blockstack.loadUserData()
-      this.user = new blockstack.Person(this.userData.profile)
-      this.user.username = this.userData.username || this.user._profile.name
-      await db.blockstackImport()
-      this.importing = false
+      this.signIn()
     } else if (blockstack.isSignInPending()) {
       blockstack.handlePendingSignIn()
       .then((userData) => {
-        window.location = window.location.origin
+        this.userData = userData
+        this.signIn()
       })
     }
   },
@@ -57,6 +55,17 @@ export default {
     signOut () {
       blockstack.signUserOut(window.location.href)
       this.user = null
+    },
+    async signIn () {
+      this.user = new blockstack.Person(this.userData.profile)
+      this.user.username = this.userData.username || this.user._profile.name
+      try {
+        await db.blockstackImport()
+      } catch (error) {
+        // possibly offline
+        this.importing = false
+      }
+      this.importing = false
     }
   },
   data () {
@@ -64,7 +73,8 @@ export default {
       user: null,
       blockstack: blockstack,
       importing: true,
-      spinnerIcon
+      spinnerIcon,
+      userData: null
     }
   }
 }

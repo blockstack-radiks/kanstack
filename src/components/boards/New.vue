@@ -11,24 +11,45 @@
               label Name
               input.form-control(v-model="name", placeholder="Give it a cool name")
             .mt-3
-            b-button(size="lg", :block="true", type="submit", variant="primary") Save
+            b-button(size="lg", :block="true", type="submit", variant="primary", :disabled="saving") Save
 </template>
 
 <script>
 import db from '../../db'
+import helpers from '../../helpers'
+const { colors } = helpers
 
 export default {
   data () {
     return {
-      name: ''
+      name: '',
+      saving: false
     }
   },
   methods: {
     async save () {
-      const boardId = await db.boards.putEncrypted({
-        name: this.name
-      })
-      this.$router.push({name: 'boards_show', params: { id: boardId }})
+      this.saving = true
+      const board = {
+        name: this.name,
+        color: colors[Math.floor(Math.random() * colors.length)]
+      }
+      board.id = await db.boards.putEncrypted(board)
+      db.lists.bulkPutEncrypted([
+        {
+          name: 'To Do',
+          boardId: board.id
+        },
+        {
+          name: 'Doing',
+          boardId: board.id
+        },
+        {
+          name: 'Done',
+          boardId: board.id
+        }
+      ])
+      this.$router.push({name: 'boards_show', params: { id: board.id }})
+      this.saving = false
     }
   }
 }

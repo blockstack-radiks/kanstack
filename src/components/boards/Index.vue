@@ -5,7 +5,12 @@
       .card(:style="{ backgroundColor: boardColor(board, 0.25) }")
         .card-body.text-center
           router-link(:to="{name: 'boards_show', params: { id: board.id }}")
-            h4.text-dark{{ board.name }}
+            h4.mb-0.text-dark {{ board.name }}
+    .col-md-4.col-xs-12.mb-3.mt-3
+      .card(:style="{ backgroundColor: '#171717' }")
+        .card-body.text-center
+          router-link(to="/boards/new")
+            h4.mb-0.text-light New Board
 </template>
 
 <script>
