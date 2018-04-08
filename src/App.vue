@@ -55,6 +55,7 @@ export default {
     signOut () {
       blockstack.signUserOut(window.location.href)
       this.user = null
+      this.$router.push('/')
     },
     async signIn () {
       this.user = new blockstack.Person(this.userData.profile)

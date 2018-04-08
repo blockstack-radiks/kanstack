@@ -58,8 +58,11 @@ export default {
     this.fetchLists()
   },
   beforeDestroy () {
-    document.querySelector('nav').style.backgroundColor = null
     document.body.style.backgroundColor = null
+    const nav = document.querySelector('nav')
+    if (nav) {
+      nav.style.backgroundColor = null
+    }
   },
   data () {
     return {

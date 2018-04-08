@@ -7,6 +7,11 @@
       a(href="https://blockstack.org", target="_blank")  Blockstack
       |.
     button.btn.btn-secondary(@click.prevent="signIn") Sign In with Blockstack
+    p.mt-2 A few cool features:
+    ul
+      li Offline friendly
+      li Client-side encryption
+      li Zippy fast
 </template>
 
 <script>
