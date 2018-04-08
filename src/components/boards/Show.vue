@@ -31,7 +31,7 @@
                 card(:card="card", @deleteCard="deleteCard")
             div(v-if="list.addingCard")
               b-form(@submit="saveNewCard(list)")
-                input.form-control.mb-3(v-model="list.newCardName", placeholder="Name", @keyup.esc="cancelAddingCard(list)")
+                input.form-control.mb-3(v-model="list.newCardName", placeholder="Name", @keyup.esc="() => { cancelAddingCard(list) }")
                 b-button(:block="true", variant="outline-primary", type="submit") Save
             div(v-else)
               b-button(:block="true", variant="outline-secondary", @click="newCard(list)") Add Card
@@ -99,10 +99,10 @@ export default {
     },
     async saveNewList () {
       const list = { name: this.newListName, boardId: this.board.id }
-      list.id = await db.lists.putEncrypted(list)
       this.addingNewList = false
       this.newListName = ''
       this.lists.push(list)
+      list.id = await db.lists.putEncrypted(list)
     },
     async fetchLists () {
       this.lists = await db.lists.where('boardId').equals(this.board.id).toDecryptedArray()

@@ -8,7 +8,7 @@ div
       label Notes
       textarea.form-control(v-model="card.notes", placeholder="Describe this card")
     p Tasks
-    .task(v-for="(task, index) in card.tasks")
+    .task.mb-2(v-for="(task, index) in card.tasks")
       b-form.row(@submit="saveTask(task)")
         .col-8
           div(v-if="task.editing")
@@ -24,14 +24,14 @@ div
             span
               font-awesome-icon.ml-2.mr-2.text-danger.task-icon.pointer(:icon="trashIcon", @click="deleteTask(index)")
             b-form-checkbox(v-model="task.completed", @change="save")
-    b-form.mt-2(@submit="addTask", v-if="addingTask")
+    b-form.mt-2.mb-2(@submit="addTask", v-if="addingTask")
       .row
         .col-8
           input.form-control.mb-2.mr-auto(v-model="newTaskName", placeholder="Add a Task", autofocus)
         .col-4
           b-button(variant="outline-primary", :block="true", type="submit") Save
     div(v-else)
-      b-button.mt-3(variant="outline-secondary", @click="newTask") New Task
+      b-button(variant="outline-secondary", @click="newTask") New Task
     hr.mt-3.mb-3
     .row
       .col-8
