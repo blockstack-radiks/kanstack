@@ -1,0 +1,12 @@
+[Settings]
+  ID = "5da493fb-e00a-4090-97f8-14a237a4a18a"
+
+# global context
+[build]
+  publish = "public/"
+  command = "node build/build.js"
+
+[[headers]]
+  for = "/manifest.json"
+[headers.values]
+  Access-Control-Allow-Origin = "*"

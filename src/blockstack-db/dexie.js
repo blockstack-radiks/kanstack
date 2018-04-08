@@ -16,7 +16,7 @@ const decryptObject = (encrypted, privateKey, indexes) => {
   for (const key in encrypted) {
     if (encrypted.hasOwnProperty(key) && indexes.indexOf(key) === -1) {
       const value = encrypted[key]
-      decrypted[key] = decryptECIES(privateKey, value)
+      decrypted[key] = stringToValue(decryptECIES(privateKey, value))
     }
   }
   return decrypted
@@ -27,11 +27,31 @@ const encryptObject = (object, publicKey, indexes) => {
   for (const key in object) {
     if (object.hasOwnProperty(key) && indexes.indexOf(key) === -1) {
       const value = object[key]
-      const cipher = encryptECIES(publicKey, value)
+      const cipher = encryptECIES(publicKey, valueToString(value))
       encrypted[key] = cipher
     }
   }
   return encrypted
+}
+
+const valueToString = (value) => {
+  if (typeof value === typeof (true)) {
+    return value ? 'true' : 'false'
+  } else if (typeof value === 'number') {
+    return String(value)
+  } else {
+    return value
+  }
+}
+
+const stringToValue = (value) => {
+  if ((value === 'true') || (value === 'false')) {
+    return value === 'true'
+  } else if (!isNaN(value)) {
+    return parseFloat(value)
+  } else {
+    return value
+  }
 }
 
 export default (filename) => {

@@ -133,4 +133,8 @@ await db.todos.bulkPutEncrypted([
 ])
 ~~~
 
+#### Special Notes
+
+Note on encrypting non-strings: Currently, `blockstack.js` only can encrypt strings, buffers, or arrays of strings. That means it does not work with boolean or number values. Special logic is added to automatically convert `true`/`false` to `"true"`/`"false"` before encryption, and back to a boolean on decryption if the value is `"true"`/`"false"`. Similar logic is added for number values, to convert to/from string values.
+
 Note on encryption safety: Currently, `blockstack.js` stores your app private key in `localStorage`, which is also vulnerable to local file system attacks. To ensure safety of your encrypted data, make sure to log out of apps when not using them. When you log out, your private key is removed from `localStorage`, and thus your data cannot be decrypted.

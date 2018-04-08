@@ -1,10 +1,10 @@
 {
-  "name": "Todo App",
-  "start_url": "http://blockstack-todos.appartisan.com",
-  "description": "A simple todo app build on blockstack",
+  "name": "KanStack",
+  "start_url": "https://kanstack.hankstoever.com",
+  "description": "A decentralized, encrypted Kanban board built on Blockstack.",
   "icons": [{
-    "src": "http://blockstack-todos.appartisan.com/logo.png",
-    "sizes": "400x400",
+    "src": "https://kanstack.hankstoever.com/logo.png",
+    "sizes": "1028x1028",
     "type": "image/png"
   }]
 }
