@@ -74,6 +74,15 @@ export default (filename) => {
       })
     }
 
+    db.Table.prototype.deleteAndExport = function (object) {
+      return new Promise(async (resolve, reject) => {
+        await this.delete(object)
+        resolve()
+        const blockstack = new BlockstackDB(db.backendDB(), filename)
+        blockstack.export()
+      })
+    }
+
     db.Table.prototype.putEncrypted = function (object) {
       return new Promise(async (resolve, reject) => {
         const privateKey = loadUserData().appPrivateKey

@@ -12,7 +12,7 @@ div
       b-form.row(@submit="saveTask(task)")
         .col-8
           div(v-if="task.editing")
-            input.form-control(v-model="task.name")
+            input.form-control(v-model="task.name", :ref="'task-input-'+task.id", autofocus)
           p(v-else)
             | {{ task.name }}
         .col-4.text-right
@@ -23,15 +23,15 @@ div
               font-awesome-icon.ml-2.task-icon.pointer(:icon="pencilIcon", @click="editTask(task)")
             span
               font-awesome-icon.ml-2.mr-2.text-danger.task-icon.pointer(:icon="trashIcon", @click="deleteTask(task, index)")
-            b-form-checkbox(v-model="task.completed", @change="saveTask(task)")
+            b-form-checkbox(v-model="task.completed", @change="saveTaskCompleted(task)")
     b-form.mt-2.mb-2(@submit="addTask", v-if="addingTask")
       .row
         .col-8
-          input.form-control.mb-2.mr-auto(v-model="newTaskName", placeholder="Add a Task", autofocus)
+          b-form-input.mb-2.mr-auto(v-model="newTaskName", placeholder="Add a Task", autofocus)
         .col-4
           b-button(variant="outline-primary", :block="true", type="submit") Save
     div(v-else)
-      b-button(variant="outline-secondary", @click="newTask") New Task
+      b-button(variant="outline-secondary", @click="newTask", ref="newTaskButton") New Task
     hr.mt-3.mb-3
     .row
       .col-8
@@ -113,7 +113,7 @@ export default {
     },
     async deleteTask (task, index) {
       this.tasks.splice(index, 1)
-      await db.tasks.delete(task)
+      await db.tasks.deleteAndExport(task)
       this.$forceUpdate()
     },
     editTask (task) {
@@ -122,6 +122,11 @@ export default {
     },
     saveTask (task) {
       task.editing = false
+      this.$forceUpdate()
+      db.tasks.putEncrypted(task)
+      this.$refs.newTaskButton.focus()
+    },
+    saveTaskCompleted (task) {
       this.$nextTick(() => {
         db.tasks.putEncrypted(task)
       })

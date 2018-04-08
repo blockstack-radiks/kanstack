@@ -37,8 +37,6 @@ import trashIcon from '@fortawesome/fontawesome-free-regular/faTrashAlt'
 import cogsIcon from '@fortawesome/fontawesome-free-solid/faCogs'
 import vuedraggable from 'vuedraggable'
 
-import _ from 'underscore'
-
 import db from '../../db'
 import Card from '../card'
 import List from '../list'
@@ -90,32 +88,15 @@ export default {
     },
     async fetchLists () {
       this.lists = await db.lists.where('boardId').equals(this.board.id).toDecryptedArray()
-      await this.fetchCards()
       this.loading = false
       this.$forceUpdate()
-    },
-    async fetchCards () {
-      if (this.lists.length === 0) {
-        return true
-      }
-      return new Promise((resolve, reject) => {
-        _.each(this.lists, async (list, index, lists) => {
-          const cards = await db.cards.where('listId').equals(list.id).toDecryptedArray()
-          list.cards = _.sortBy(cards, (card) => {
-            return card.order
-          })
-          if (index === lists.length - 1) {
-            resolve()
-          }
-        })
-      })
     },
     listsWidth () {
       return `${(this.lists.length + 1) * 320}px`
     },
     deleteList (list) {
       this.$dialog.confirm('Are you sure you want to delete this list?').then(() => {
-        db.lists.delete(list.id)
+        db.lists.deleteAndExport(list.id)
         this.fetchLists()
       })
     },
@@ -127,7 +108,7 @@ export default {
     },
     async deleteBoard () {
       this.$dialog.confirm('Are you sure you want to delete this board? All items will be lost.').then(async () => {
-        await db.boards.delete(this.board.id)
+        await db.boards.deleteAndExport(this.board.id)
         db.blockstack.export()
         this.$router.push('/')
       })
