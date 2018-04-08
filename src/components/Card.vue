@@ -8,13 +8,13 @@ div
       label Notes
       textarea.form-control(v-model="card.notes", placeholder="Describe this card")
     p Tasks
-    .task.mb-2(v-for="(task, index) in card.tasks")
+    .task.mb-2(v-for="(task, index) in tasks")
       b-form.row(@submit="saveTask(task)")
         .col-8
           div(v-if="task.editing")
             input.form-control(v-model="task.name")
           p(v-else)
-            {{ task.name }}
+            | {{ task.name }}
         .col-4.text-right
           div(v-if="task.editing")
             b-button(variant="outline-primary", block, type="submit") Save
@@ -22,8 +22,8 @@ div
             span
               font-awesome-icon.ml-2.task-icon.pointer(:icon="pencilIcon", @click="editTask(task)")
             span
-              font-awesome-icon.ml-2.mr-2.text-danger.task-icon.pointer(:icon="trashIcon", @click="deleteTask(index)")
-            b-form-checkbox(v-model="task.completed", @change="save")
+              font-awesome-icon.ml-2.mr-2.text-danger.task-icon.pointer(:icon="trashIcon", @click="deleteTask(task, index)")
+            b-form-checkbox(v-model="task.completed", @change="saveTask(task)")
     b-form.mt-2.mb-2(@submit="addTask", v-if="addingTask")
       .row
         .col-8
@@ -41,9 +41,9 @@ div
         b-button(variant="danger", @click="confirmDelete") Delete
   div.list-card.mb-3(@click="showModal")
     p {{ card.name }}
-    div(v-if="card.tasks && card.tasks.length > 0")
+    div(v-if="!dragging && tasks && tasks.length > 0")
       b-badge(:variant="completed() ? 'success' : 'secondary'")
-        {{ completedLength() }} / {{ card.tasks.length }}
+        | {{ completedLength() }} / {{ tasks.length }}
 </template>
 
 <script>
@@ -55,21 +55,24 @@ import db from '../db'
 
 export default {
   props: [
-    'card'
+    'card',
+    'dragging'
   ],
   data () {
     return {
       newTaskName: '',
       pencilIcon,
       addingTask: false,
-      trashIcon
+      trashIcon,
+      tasks: this.tasks || []
     }
   },
   components: {
     FontAwesomeIcon
   },
   mounted () {
-    this.card.tasks = this.card.tasks || []
+    this.fetchTasks()
+    delete this.card.tasks
   },
   methods: {
     showModal () {
@@ -84,35 +87,34 @@ export default {
     newTask () {
       this.addingTask = true
     },
-    addTask () {
+    async addTask () {
       const task = {
         name: this.newTaskName,
-        completed: false
+        completed: false,
+        cardId: this.card.id
       }
-      this.card.tasks.push(task)
+      this.tasks.push(task)
       this.newTaskName = ''
       this.addingTask = false
       this.$forceUpdate()
-      this.save()
+      task.id = await db.tasks.putEncrypted(task)
     },
     completed () {
-      if (!this.card.tasks) {
-        return false
-      }
-      return this.completedLength() === this.card.tasks.length
+      return this.completedLength() === this.tasks.length
     },
     completedLength () {
       let completed = 0
-      this.card.tasks.forEach((task) => {
+      this.tasks.forEach((task) => {
         if (task.completed) {
           completed += 1
         }
       })
       return completed
     },
-    deleteTask (index) {
-      this.card.tasks.splice(index, 1)
-      this.save()
+    async deleteTask (task, index) {
+      this.tasks.splice(index, 1)
+      await db.tasks.delete(task)
+      this.$forceUpdate()
     },
     editTask (task) {
       task.editing = true
@@ -120,13 +122,21 @@ export default {
     },
     saveTask (task) {
       task.editing = false
-      this.save()
+      this.$nextTick(() => {
+        db.tasks.putEncrypted(task)
+      })
+    },
+    toggleTaskCompleted (task) {
+
     },
     confirmDelete () {
       this.$dialog.confirm('Are you sure?').then(async () => {
         this.$refs.modal.hide()
         this.$emit('deleteCard', this.card)
       })
+    },
+    async fetchTasks () {
+      this.tasks = await db.tasks.where('cardId').equals(this.card.id).toDecryptedArray()
     }
   }
 }

@@ -11,31 +11,13 @@
     .row
       .col-12
         h3.pl-3.pr-3
-          {{ board.name }}
+          | {{ board.name }}
           .float-right
             font-awesome-icon.float-right.pointer(:icon="cogsIcon", @click="showSettings")
     .list-row-container.h-100
       .list-row(:style="{ width: listsWidth() }")
-        .list(v-for="list in lists")
-          .list-inner
-            b-form(v-if="list.editing", @submit="saveList(list)")
-              input.form-control.mb-3(v-model="list.name")
-              b-button(:block="true", variant="outline-primary", type="submit") Save
-            h5(v-else)
-              {{ list.name }}
-              font-awesome-icon.ml-2.list-name-edit.d-none(:icon="pencilIcon", @click="editList(list)")
-              font-awesome-icon.ml-2.list-name-edit.d-none.text-danger.float-right(:icon="trashIcon", @click="deleteList(list)")
-            .mt-3
-            vuedraggable.draggable(v-model="list.cards", :options="{group: 'cards'}", @change="(evt) => { onSort(list, evt) }")
-              div(v-for="card in list.cards")
-                card(:card="card", @deleteCard="deleteCard")
-            div(v-if="list.addingCard")
-              b-form(@submit="saveNewCard(list)")
-                input.form-control.mb-3(v-model="list.newCardName", placeholder="Name", @keyup.esc="() => { cancelAddingCard(list) }")
-                b-button(:block="true", variant="outline-primary", type="submit") Save
-            div(v-else)
-              b-button(:block="true", variant="outline-secondary", @click="newCard(list)") Add Card
-
+        .list(v-for="list in lists", :key="list.id")
+          list(:list="list")
         .list.new-list-card
           .list-inner
             div(v-if="addingNewList")
@@ -59,6 +41,7 @@ import _ from 'underscore'
 
 import db from '../../db'
 import Card from '../card'
+import List from '../list'
 import Settings from './settings'
 import helpers from '../../helpers'
 const { boardColor, colors } = helpers
@@ -68,7 +51,8 @@ export default {
     FontAwesomeIcon,
     vuedraggable,
     Card,
-    Settings
+    Settings,
+    List
   },
   async mounted () {
     this.board = await db.boards.getEncrypted(parseInt(this.$route.params.id))
@@ -126,30 +110,6 @@ export default {
         })
       })
     },
-    editList (list) {
-      list.editing = true
-      this.$forceUpdate()
-    },
-    saveList (list) {
-      list.editing = false
-      this.$forceUpdate()
-      db.lists.putEncrypted(list)
-    },
-    newCard (list) {
-      list.addingCard = true
-      list.newCardName = ''
-      this.$forceUpdate()
-    },
-    async saveNewCard (list) {
-      list.addingCard = false
-      const card = {
-        name: list.newCardName,
-        listId: list.id
-      }
-      list.cards.push(card)
-      this.$forceUpdate()
-      card.id = await db.cards.putEncrypted(card)
-    },
     listsWidth () {
       return `${(this.lists.length + 1) * 320}px`
     },
@@ -158,33 +118,6 @@ export default {
         db.lists.delete(list.id)
         this.fetchLists()
       })
-    },
-    async deleteCard (card) {
-      await db.cards.delete(card.id)
-      await this.fetchCards()
-    },
-    updateCardsOrder (list) {
-      return new Promise(async (resolve, reject) => {
-        for (let index = 0; index < list.cards.length; index++) {
-          const card = list.cards[index]
-          card.order = index
-        }
-        await db.cards.bulkPutEncrypted(list.cards)
-        resolve()
-      })
-    },
-    async onSort (list, event) {
-      if (event.added) {
-        const card = event.added.element
-        card.listId = list.id
-        await db.cards.putEncrypted(card)
-        await this.updateCardsOrder(list)
-      } else if (event.removed) {
-
-      } else if (event.moved) {
-        await this.updateCardsOrder(list)
-      }
-      this.$forceUpdate()
     },
     showSettings () {
       this.$refs.settings.show()
@@ -210,6 +143,7 @@ export default {
     },
     cancelAddingCard (list) {
       list.addingCard = false
+      this.$forceUpdate()
     }
   }
 }
