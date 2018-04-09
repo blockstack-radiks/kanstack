@@ -135,7 +135,7 @@ export default {
 <style lang="sass">
 .list-row-container
   overflow-x: scroll
-  // padding-bottom: 100px
+  padding-bottom: 50px
   padding-left: 5px
 
 .list
