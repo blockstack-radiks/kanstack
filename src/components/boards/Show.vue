@@ -14,7 +14,7 @@
           | {{ board.name }}
           .float-right
             font-awesome-icon.float-right.pointer(:icon="cogsIcon", @click="showSettings")
-    .list-row-container.h-100
+    .list-row-container
       .list-row(:style="{ width: listsWidth() }")
         .list(v-for="list in lists", :key="list.id")
           list(:list="list", @delete="deleteList(list)")
@@ -112,7 +112,6 @@ export default {
     async deleteBoard () {
       this.$dialog.confirm('Are you sure you want to delete this board? All items will be lost.').then(async () => {
         await db.boards.deleteAndExport(this.board.id)
-        db.blockstack.export()
         this.$router.push('/')
       })
     },

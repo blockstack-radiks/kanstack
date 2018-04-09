@@ -4,9 +4,6 @@ div
     .form-group
       label Name
       input.form-control(v-model="card.name")
-    .form-group
-      label Notes
-      textarea.form-control(v-model="card.notes", placeholder="Describe this card")
     p Tasks
     .task.mb-2(v-for="(task, index) in tasks")
       b-form.row(@submit="saveTask(task)")
@@ -32,6 +29,19 @@ div
           b-button(variant="outline-primary", :block="true", type="submit") Save
     div(v-else)
       b-button(variant="outline-secondary", @click="newTask", ref="newTaskButton") New Task
+    p.mt-3 Due Date
+    b-form-input.mt-2.mb-2(v-model="dueDate", type="date")
+    .form-group
+      label.mb-0 Notes
+      div(v-bind:class="{ 'd-none': !editingNotes }")
+        p.mb-1
+          small.text-muted
+            | Format your notes using
+            a(href="https://simplemde.com/markdown-guide", target="_blank")  Markdown
+        textarea.CodeMirror(placeholder="Add some notes", ref="body")
+      div(v-if="!editingNotes")
+        div(v-html="marked(card.notes)", v-if="card.notes")
+        b-button(variant="outline-secondary", @click="() => { editingNotes = true }") Edit Notes
     hr.mt-3.mb-3
     .row
       .col-8
@@ -41,15 +51,22 @@ div
         b-button(variant="danger", @click="confirmDelete") Delete
   div.list-card.mb-3(@click="showModal")
     p {{ card.name }}
-    div(v-if="!dragging && tasks && tasks.length > 0")
-      b-badge(:variant="completed() ? 'success' : 'secondary'")
-        | {{ completedLength() }} / {{ tasks.length }}
+    div(v-if="!dragging && ((tasks && tasks.length > 0) || dueDate)")
+      p
+        b-badge(:variant="completed() ? 'success' : 'secondary'", v-if="tasks.length > 0")
+          | {{ completedLength() }} / {{ tasks.length }}
+        span.small.float-right(v-if="dueDate")
+          | due {{ formattedDueDate }}
+      .clearfix
 </template>
 
 <script>
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import pencilIcon from '@fortawesome/fontawesome-free-solid/faPencilAlt'
 import trashIcon from '@fortawesome/fontawesome-free-regular/faTrashAlt'
+import moment from 'moment'
+import SimpleMDE from 'simplemde'
+import marked from 'marked'
 
 import db from '../db'
 
@@ -64,21 +81,46 @@ export default {
       pencilIcon,
       addingTask: false,
       trashIcon,
-      tasks: this.tasks || []
+      tasks: this.tasks || [],
+      dueDate: null,
+      dueDateMoment: null,
+      editingNotes: false,
+      marked: marked
     }
   },
   components: {
     FontAwesomeIcon
   },
   mounted () {
+    if (this.card.dueDate) {
+      this.dueDateMoment = moment(this.card.dueDate)
+      this.dueDate = this.dueDateMoment.format('YYYY-MM-DD')
+    }
     this.fetchTasks()
+    this.editor = new SimpleMDE({
+      element: this.$refs.body,
+      spellChecker: false
+    })
+    this.editor.value(this.card.notes)
+    this.$forceUpdate()
+    this.editor.codemirror.on('change', () => {
+      const value = this.editor.value()
+      this.card.notes = value
+    })
     delete this.card.tasks
+  },
+  watch: {
+    dueDate (val) {
+      this.dueDateMoment = moment(val)
+      this.card.dueDate = this.dueDateMoment.format()
+    }
   },
   methods: {
     showModal () {
       this.$refs.modal.show()
     },
     save () {
+      this.editingNotes = false
       this.$nextTick(() => {
         db.cards.putEncrypted(this.card)
         this.$forceUpdate()
@@ -143,6 +185,17 @@ export default {
     async fetchTasks () {
       this.tasks = await db.tasks.where('cardId').equals(this.card.id).toDecryptedArray()
     }
+  },
+  computed: {
+    formattedDueDate () {
+      if (this.dueDateMoment) {
+        const today = moment().startOf('day')
+        if (today.isSame(this.dueDateMoment, 'd')) {
+          return 'today'
+        }
+        return this.dueDateMoment.from(today)
+      }
+    }
   }
 }
 </script>
@@ -157,4 +210,10 @@ export default {
     &:hover
       .task-icon
         display: inline-block
+
+</style>
+
+<style lang="sass">
+.datepicker-input
+  background-color: #fff !important
 </style>
