@@ -27,7 +27,7 @@ import trashIcon from '@fortawesome/fontawesome-free-regular/faTrashAlt'
 import vuedraggable from 'vuedraggable'
 import _ from 'underscore'
 
-import Card from './card'
+import Card from './Card'
 import db from '../db'
 
 export default {
