@@ -51,7 +51,7 @@ div
         b-button(variant="danger", @click="confirmDelete") Delete
   div.list-card.mb-3(@click="showModal")
     p {{ card.name }}
-    div(v-if="!dragging && ((tasks && tasks.length > 0) || dueDate)")
+    div(v-if="(tasks && tasks.length > 0) || dueDate")
       p
         b-badge(:variant="completed() ? 'success' : 'secondary'", v-if="tasks.length > 0")
           | {{ completedLength() }} / {{ tasks.length }}
