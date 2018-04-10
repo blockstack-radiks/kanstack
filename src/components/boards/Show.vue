@@ -38,9 +38,9 @@ import cogsIcon from '@fortawesome/fontawesome-free-solid/faCogs'
 import vuedraggable from 'vuedraggable'
 
 import db from '../../db'
-import Card from '../card'
-import List from '../list'
-import Settings from './settings'
+import Card from '../Card'
+import List from '../List'
+import Settings from './Settings'
 import helpers from '../../helpers'
 const { boardColor, colors } = helpers
 
