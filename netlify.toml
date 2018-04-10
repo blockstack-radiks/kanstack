@@ -3,7 +3,7 @@
 
 # global context
 [build]
-  publish = "public/"
+  publish = "dist/"
   command = "node build/build.js"
 
 [[headers]]
