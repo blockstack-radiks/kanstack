@@ -90,7 +90,7 @@ export default {
   align-items: center;
   justify-content: center;
   background: linear-gradient(to right, rgba(255,255,255,0.6) 20%,
-              rgba(255,255,255,1)), url('/asoggetti.jpg');
+              rgba(255,255,255,1)), url('/asoggetti-smaller.jpg');
   background-size: cover;
   font-weight: 500;
 }
