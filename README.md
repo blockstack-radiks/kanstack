@@ -7,7 +7,7 @@ A Kanban board app built on Blockstack.
 - Automatic encryption / decryption of data in IndexedDB
 - Automatic import / export of IndexedDB data to Blockstack storage.
 
-To learn more about integrating Blockstack encryption and storage with IndexedDB, [check out the documentation](./src/blockstack-db/README.MD).
+To learn more about integrating Blockstack encryption and storage with IndexedDB, [check out the documentation](./src/blockstack-db/README.md).
 
 ## Build Setup
 
