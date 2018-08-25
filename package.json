@@ -1,0 +1,32 @@
+{
+  "name": "create-next-example-app",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "connected-react-router": "^4.4.1",
+    "history": "^4.7.2",
+    "next": "^6.1.1",
+    "polished": "^2.0.2",
+    "prop-types": "^15.6.2",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
+    "react-redux": "^5.0.7",
+    "rebass": "^2.1.0",
+    "redux": "^4.0.0",
+    "redux-localstorage": "^0.4.1",
+    "redux-thunk": "^2.3.0",
+    "styled-components": "^3.4.5",
+    "system-components": "^3.0.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.2.6",
+    "eslint": "^5.3.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-react": "^7.11.0"
+  }
+}
