@@ -13,14 +13,6 @@ const middleware = [
 
 const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
 
-// if (process.env.NODE_ENV === 'development') {
-//   const devToolsExtension = window.__REDUX_DEVTOOLS_EXTENSION__;
-
-//   if (typeof devToolsExtension === 'function') {
-//     enhancers.push(devToolsExtension());
-//   }
-// }
-
 const composedEnhancers = composeEnhancers(
   applyMiddleware(...middleware),
   persistState(['user']),

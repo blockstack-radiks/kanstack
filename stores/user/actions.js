@@ -2,9 +2,8 @@ import * as blockstack from 'blockstack';
 import * as Constants from './constants';
 
 const login = () => {
-  // const redirect = `${window.location.origin}`;
-  const redirect = 'http://localhost:4040';
-  const manifest = 'http://localhost:4040/manifest.json';
+  const redirect = `${window.location.origin}`;
+  const manifest = `${redirect}/manifest.json`;
   console.log(redirect, manifest);
   blockstack.redirectToSignIn(redirect, manifest);
   return {
