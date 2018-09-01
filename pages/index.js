@@ -37,6 +37,7 @@ class Home extends React.Component {
 
 Home.propTypes = {
   currentUser: PropTypes.object,
+  handleLogIn: PropTypes.func.isRequired,
 };
 
 Home.defaultProps = {

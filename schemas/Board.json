@@ -1,0 +1,9 @@
+{
+  "name": "Board",
+  "attributes": {
+    "name": {
+      "name": "name",
+      "type": "string"
+    }
+  }
+}

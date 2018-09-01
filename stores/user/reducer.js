@@ -17,6 +17,12 @@ export default (state = initialState, action) => {
         currentUser: action.user,
       };
     }
+    case Constants.USER_LOGOUT: {
+      return {
+        ...state,
+        currentUser: null,
+      };
+    }
     default:
       return state;
   }

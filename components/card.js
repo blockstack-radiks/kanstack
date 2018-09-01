@@ -1,11 +1,32 @@
 import Styled from 'styled-components';
-import { Card } from 'rebass';
+// import { Box } from 'rebass';
+import { width } from 'styled-system';
+// import sys from 'system-components';
 
-export default Styled(Card)`
-  border: 1px solid gray;
+// export const Card = sys({
+//   p: 2,
+//   bg: 'white',
+//   borderRadius: 2,
+//   boxShadow: '0 0 2px gray',
+// }, {
+//   overflow: 'hidden',
+// }, 'space', 'color');
+
+// Card.displayName = 'Card';
+
+export const Card = Styled.div`
+  ${width}
+  box-shadow: 0 0 2px gray;
+  border-radius: 2px;
+  padding: 10px 15px;
+`;
+
+export default Card;
+
+export const CardLink = Styled(Card.withComponent('a'))`
   text-decoration: none;
-  a {
-    text-decoration: none;
-    color: black;
-  }
+  display: block;
+  text-align: center;
+  color: black;
+  width: 100%;
 `;

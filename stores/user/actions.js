@@ -4,10 +4,17 @@ import * as Constants from './constants';
 const login = () => {
   const redirect = `${window.location.origin}`;
   const manifest = `${redirect}/manifest.json`;
-  console.log(redirect, manifest);
-  blockstack.redirectToSignIn(redirect, manifest);
+  const scopes = ['store_write', 'publish_data'];
+  blockstack.redirectToSignIn(redirect, manifest, scopes);
   return {
     type: Constants.LOGIN,
+  };
+};
+
+const logout = () => {
+  blockstack.signUserOut();
+  return {
+    type: Constants.USER_LOGOUT,
   };
 };
 
@@ -31,4 +38,5 @@ const handleLogIn = () => async function innerHandleSignIn(dispatch) {
 export default {
   login,
   handleLogIn,
+  logout,
 };

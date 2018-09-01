@@ -1,4 +1,5 @@
 import * as blockstack from 'blockstack';
+import { signECDSA } from 'blockstack/lib/encryption';
 
 const valueToString = (value) => {
   if (typeof value === typeof (true)) {
@@ -41,4 +42,9 @@ export const encryptObject = (model) => {
     encrypted[key] = decrypted ? value : blockstack.encryptContent(valueToString(value));
   });
   return encrypted;
+};
+
+export const signMessage = (message) => {
+  const { appPrivateKey } = blockstack.loadUserData();
+  return signECDSA(appPrivateKey, message);
 };

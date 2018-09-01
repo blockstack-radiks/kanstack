@@ -1,5 +1,6 @@
 {
   "name": "create-next-example-app",
+  "license": "MIT",
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
@@ -9,18 +10,23 @@
     "blockstack": "^18.0.4",
     "connected-react-router": "^4.4.1",
     "express": "^4.16.3",
+    "grid-styled": "^5.0.2",
     "history": "^4.7.2",
     "next": "^6.1.1",
     "polished": "^2.0.2",
     "prop-types": "^15.6.2",
+    "radiks-server": "file:../server",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-redux": "^5.0.7",
     "rebass": "^2.1.0",
     "redux": "^4.0.0",
     "redux-localstorage": "^0.4.1",
+    "redux-persist": "^5.10.0",
     "redux-thunk": "^2.3.0",
     "styled-components": "^3.4.5",
+    "styled-grid": "^1.0.0-beta.1",
+    "styled-system": "^3.0.2",
     "system-components": "^3.0.0"
   },
   "devDependencies": {

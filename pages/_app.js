@@ -2,6 +2,7 @@ import App, { Container } from 'next/app';
 import React from 'react';
 import { withRouter } from 'next/router';
 import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 
 import { ThemeProvider } from 'styled-components';
 import withReduxStore from '../lib/with-redux-store';
@@ -23,13 +24,17 @@ class MyApp extends App {
   }
 
   render() {
-    const { Component, pageProps, reduxStore } = this.props;
+    const {
+      Component, pageProps, reduxStore, persistor,
+    } = this.props;
 
     return (
       <ThemeProvider theme={{}}>
         <Container>
           <Provider store={reduxStore}>
-            <Component {...pageProps} serverCookies={this.props.cookies} />
+            <PersistGate persistor={persistor}>
+              <Component {...pageProps} serverCookies={this.props.cookies} />
+            </PersistGate>
           </Provider>
         </Container>
       </ThemeProvider>

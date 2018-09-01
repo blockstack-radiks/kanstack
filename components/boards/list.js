@@ -1,22 +1,27 @@
 import React from 'react';
-import { Flex, Box, Text } from 'rebass';
+import { Text } from 'rebass';
+import { Flex, Box } from 'grid-styled';
 import Link from 'next/link';
 
-import Card from '../card';
+import { Card as CardLink } from '../card';
+import { signMessage } from '../../radiks/helpers';
 
 class BoardsList extends React.Component {
+  componentDidMount() {
+    const signed = signMessage('radiks');
+    console.log(signed);
+  }
+
   render() {
     return (
-      <Flex>
+      <Flex flexDirection="row">
         <Box width={1 / 3} mt={4}>
-          <Link href="/boards/new">
-            <Card>
+          <Link href="/boards/new" passHref>
+            <CardLink>
               <Text textAlign="center">
-                <Link href="/boards/new">
-                  <a>Add a Board</a>
-                </Link>
+                Add a Board
               </Text>
-            </Card>
+            </CardLink>
           </Link>
         </Box>
       </Flex>
