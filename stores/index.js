@@ -16,6 +16,7 @@ const middleware = [
 const persistConfig = {
   key: 'kanstack',
   storage,
+  whitelist: ['user'],
 };
 
 const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;

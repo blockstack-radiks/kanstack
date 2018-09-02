@@ -3,7 +3,7 @@ import { Text } from 'rebass';
 import { Flex, Box } from 'grid-styled';
 import Link from 'next/link';
 
-import { Card as CardLink } from '../card';
+import { CardLink } from '../card';
 import { signMessage } from '../../radiks/helpers';
 
 class BoardsList extends React.Component {

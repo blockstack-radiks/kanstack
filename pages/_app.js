@@ -3,9 +3,13 @@ import React from 'react';
 import { withRouter } from 'next/router';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-
 import { ThemeProvider } from 'styled-components';
+
 import withReduxStore from '../lib/with-redux-store';
+
+import Model from '../radiks/model';
+
+Model.apiServer = 'http://localhost:3000';
 
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {

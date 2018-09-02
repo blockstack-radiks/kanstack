@@ -1,12 +1,15 @@
+import clone from 'lodash/cloneDeep';
 import * as Constants from './constants';
+// import Board from '../../models/board';
 
 const initialState = {
   models: {},
 };
 
 const getNewState = (state, name) => {
-  const newState = state;
-  newState.models[name] = state.models[name] || {};
+  const newState = clone(state);
+  newState.models[name] = newState.models[name] || {};
+  newState.models[name].byId = newState.models[name].byId || {};
   return newState;
 };
 
@@ -16,6 +19,8 @@ export default (state = initialState, action) => {
       const { name } = action.model.schema;
       const newState = getNewState(state, name);
       newState.models[name].currentlySaving = action.model;
+      action.model.currentlySaving = true;
+      newState.models[name].byId[action.model.uuid] = action.model;
       return {
         ...newState,
       };
@@ -24,6 +29,8 @@ export default (state = initialState, action) => {
       const { name } = action.model.schema;
       const newState = getNewState(state, name);
       newState.models[name].currentlySaving = false;
+      action.model.currentlySaving = false;
+      newState.models[name].byId[action.model.uuid] = action.model;
       return {
         ...newState,
       };

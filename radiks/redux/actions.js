@@ -22,7 +22,9 @@ const fetchedModels = (modelName, models) => ({
   models,
 });
 
-const saveModel = model => async function innerSaveModel(dispatch) {
+const saveModel = model => async function innerSaveModel(dispatch, getState) {
+  const { currentUser } = getState().user;
+  model.createdBy = currentUser;
   dispatch(savingModel(model));
   const [file, items] = await model.save();
   console.log(file, items);

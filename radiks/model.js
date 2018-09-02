@@ -1,4 +1,3 @@
-import request from 'request-promise';
 import uuid from 'uuid/v4';
 import * as blockstack from 'blockstack';
 import merge from 'lodash.merge';
@@ -15,11 +14,9 @@ export default class Model {
 
   static defaults = {}
 
-  static fetch() {
-    return request({
-      uri: this.apiServerPath(),
-      json: true,
-    });
+  static async fetch() {
+    const request = await fetch(this.apiServerPath());
+    return request.json();
   }
 
   constructor(attrs = {}) {
@@ -77,18 +74,24 @@ export default class Model {
     });
   }
 
-  saveToRadiks(encrypted) {
+  async saveToRadiks(encrypted) {
     console.log(encrypted);
     const filePath = this.blockstackPath();
-    const data = merge({}, encrypted, { filePath });
-    console.log('data for radiks', data);
+    const attributes = merge({}, encrypted, { filePath });
+    console.log('data for radiks', attributes);
     const url = this.apiServerPath();
-    return request({
+    console.log(this.createdBy.username);
+    const request = await fetch(url, {
       method: 'POST',
-      uri: url,
-      body: data,
-      json: true,
+      body: JSON.stringify({
+        attributes,
+        username: this.createdBy.username,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
+    return request.json();
   }
 
   apiServerPath(path) {

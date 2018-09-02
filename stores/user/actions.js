@@ -24,10 +24,7 @@ const gotUserData = userData => ({
 });
 
 const handleLogIn = () => async function innerHandleSignIn(dispatch) {
-  if (blockstack.isUserSignedIn()) {
-    const userData = blockstack.loadUserData();
-    dispatch(gotUserData((userData)));
-  } else if (blockstack.isSignInPending()) {
+  if (blockstack.isSignInPending()) {
     blockstack.handlePendingSignIn()
       .then((userData) => {
         dispatch(gotUserData((userData)));

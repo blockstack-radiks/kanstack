@@ -12,6 +12,8 @@
     "express": "^4.16.3",
     "grid-styled": "^5.0.2",
     "history": "^4.7.2",
+    "lodash": "^4.17.10",
+    "lodash.merge": "^4.6.1",
     "next": "^6.1.1",
     "polished": "^2.0.2",
     "prop-types": "^15.6.2",
@@ -24,10 +26,12 @@
     "redux-localstorage": "^0.4.1",
     "redux-persist": "^5.10.0",
     "redux-thunk": "^2.3.0",
+    "request-promise": "^4.2.2",
     "styled-components": "^3.4.5",
     "styled-grid": "^1.0.0-beta.1",
     "styled-system": "^3.0.2",
-    "system-components": "^3.0.0"
+    "system-components": "^3.0.0",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.6",
@@ -36,5 +40,20 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.1",
     "eslint-plugin-react": "^7.11.0"
+  },
+  "nodemonConfig": {
+    "verbose": true,
+    "watch": [
+      "./",
+      "../server"
+    ],
+    "ignore": [
+      ".next/*",
+      ".next",
+      "pages/*",
+      "components/*",
+      "radiks/*",
+      "radiks/redux/*"
+    ]
   }
 }

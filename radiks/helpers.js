@@ -36,7 +36,7 @@ export const decryptObject = (encrypted, Model) => {
 export const encryptObject = (model) => {
   const object = model.attrs;
   const encrypted = Object.assign({}, object, { uuid: model.uuid });
-  Object.keys(object).forEach((key) => {
+  Object.keys(model.schema.attributes).forEach((key) => {
     const { decrypted } = model.schema.attributes[key];
     const value = object[key];
     encrypted[key] = decrypted ? value : blockstack.encryptContent(valueToString(value));

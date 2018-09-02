@@ -29,6 +29,11 @@ app.prepare().then(async () => {
     res.sendFile(path.join(__dirname, 'static', 'manifest.json'));
   });
 
+  server.get('/boards/:id', (req, res) => {
+    const { params } = req;
+    app.render(req, res, '/boards/show', params);
+  });
+
   server.get('*', (req, res) => handle(req, res));
 
   server.listen(port, (err) => {

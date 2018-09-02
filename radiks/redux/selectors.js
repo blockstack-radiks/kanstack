@@ -5,6 +5,17 @@ export const selectCurrentlySavingModel = (state, modelName) => {
   return model && model.currentlySaving;
 };
 
+export const selectModelById = (state, modelName, id) => {
+  const model = selectModel(state, modelName);
+  return model && model.byId[id];
+};
+
+export const selectModelsById = (state, modelName) => {
+  const model = selectModel(state, modelName);
+  console.log(state, model);
+  return model && model.byId;
+};
+
 export const selectModels = (state, modelName) => {
   const model = selectModel(state, modelName);
   return model && model.models;
