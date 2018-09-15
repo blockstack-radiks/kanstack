@@ -2,9 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
-import { Flex, Box } from 'rebass';
+import { Flex, Box } from 'grid-styled';
 
 import Layout from '../../components/layout';
+import CardModal from '../../components/cards/modal';
 
 import Board from '../../models/board';
 import { Header, ListHeader } from '../../styled/board';
@@ -24,18 +25,27 @@ class ShowBoard extends React.Component {
   static propTypes = {
     boardId: PropTypes.string.isRequired,
     fetchModel: PropTypes.func.isRequired,
-    board: PropTypes.object,
     boardAttrs: PropTypes.object,
   }
 
   static defaultProps = {
-    board: {},
     boardAttrs: {},
+  }
+
+  state = {
+    modalIsOpen: true,
   }
 
   async componentDidMount() {
     const board = new Board({ id: this.props.boardId });
     this.props.fetchModel(board);
+  }
+
+  saveCard(data) {
+    console.log(data);
+    this.setState({
+      modalIsOpen: false,
+    });
   }
 
   // componentWillReceiveProps(nextProps) {
@@ -69,6 +79,11 @@ class ShowBoard extends React.Component {
             </ListHeader>
           </Box>
         </Flex>
+        <CardModal
+          isOpen={this.state.modalIsOpen}
+          onClose={() => this.setState({ modalIsOpen: false })}
+          onSave={data => this.saveCard(data)}
+        />
 
       </Layout>
     );
