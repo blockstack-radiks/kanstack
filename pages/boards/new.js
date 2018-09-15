@@ -15,10 +15,7 @@ import Board from '../../models/board';
 
 import RadiksActions from '../../radiks/redux/actions';
 import {
-  // selectCurrentlySavingModel,
   selectModelsById,
-  // selectModels,
-  // selectIsFetchingModels,
 } from '../../radiks/redux/selectors';
 
 class NewBoard extends React.Component {
@@ -39,7 +36,7 @@ class NewBoard extends React.Component {
   componentWillReceiveProps(nextProps) {
     const board = nextProps.boardsById[this.state.boardId];
     if (board && !board.currentlySaving) {
-      Router.push(`/boards/${board.uuid}`);
+      Router.push(`/boards/${board.id}`);
     }
   }
 
@@ -49,7 +46,7 @@ class NewBoard extends React.Component {
     const { name } = this.state;
     const board = new Board({ name });
     console.log(board);
-    this.setState({ boardId: board.uuid });
+    this.setState({ boardId: board.id });
     this.props.saveModel(board);
   }
 
@@ -87,7 +84,6 @@ class NewBoard extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  // board: selectCurrentlySavingModel(state, 'Board'),
   boardsById: selectModelsById(state, 'Board'),
 });
 

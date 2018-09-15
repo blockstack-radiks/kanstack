@@ -1,5 +1,7 @@
 import * as blockstack from 'blockstack';
+
 import * as Constants from './constants';
+import { logIn } from '../../radiks/helpers';
 
 const login = () => {
   const redirect = `${window.location.origin}`;
@@ -10,6 +12,10 @@ const login = () => {
     type: Constants.LOGIN,
   };
 };
+
+const loggingIn = () => ({
+  type: Constants.USER_SIGNING_IN,
+});
 
 const logout = () => {
   blockstack.signUserOut();
@@ -24,11 +30,11 @@ const gotUserData = userData => ({
 });
 
 const handleLogIn = () => async function innerHandleSignIn(dispatch) {
+  dispatch(loggingIn());
   if (blockstack.isSignInPending()) {
-    blockstack.handlePendingSignIn()
-      .then((userData) => {
-        dispatch(gotUserData((userData)));
-      });
+    const userData = await blockstack.handlePendingSignIn();
+    await logIn(userData);
+    dispatch(gotUserData((userData)));
   }
 };
 

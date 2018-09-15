@@ -20,7 +20,7 @@ export default (state = initialState, action) => {
       const newState = getNewState(state, name);
       newState.models[name].currentlySaving = action.model;
       action.model.currentlySaving = true;
-      newState.models[name].byId[action.model.uuid] = action.model;
+      newState.models[name].byId[action.model.id] = action.model;
       return {
         ...newState,
       };
@@ -30,7 +30,7 @@ export default (state = initialState, action) => {
       const newState = getNewState(state, name);
       newState.models[name].currentlySaving = false;
       action.model.currentlySaving = false;
-      newState.models[name].byId[action.model.uuid] = action.model;
+      newState.models[name].byId[action.model.id] = action.model;
       return {
         ...newState,
       };
@@ -48,6 +48,24 @@ export default (state = initialState, action) => {
       const { name } = action.model.schema;
       const newState = getNewState(state, name);
       newState.models[name].isFetchingModels = true;
+      return {
+        ...newState,
+      };
+    }
+    case Constants.FETCHING_MODEL: {
+      const { model } = action;
+      const { name } = model.schema;
+      const newState = getNewState(state, name);
+      newState.models[name].byId[model.id] = model;
+      return {
+        ...newState,
+      };
+    }
+    case Constants.FETCHED_MODEL: {
+      const { model } = action;
+      const { name } = model.schema;
+      const newState = getNewState(state, name);
+      newState.models[name].byId[model.id] = model;
       return {
         ...newState,
       };

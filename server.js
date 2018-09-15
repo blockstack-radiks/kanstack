@@ -1,6 +1,7 @@
 const express = require('express');
 const next = require('next');
 const path = require('path');
+require('dotenv').config();
 
 const { setup } = require('radiks-server');
 
@@ -14,10 +15,11 @@ const port = parseInt(process.env.PORT, 10) || 3000;
 app.prepare().then(async () => {
   const server = express();
 
-  const schemasPath = path.join(__dirname, 'schemas');
-
-  const ModelsController = await setup(schemasPath, { databaseName: 'kanstack' });
-  server.use('/radiks/models', ModelsController);
+  server.use('/radiks', setup({
+    databaseName: 'kanstack',
+    adminUser: process.env.COUCHDB_ADMIN,
+    adminPassword: process.env.COUCHDB_PASSWORD,
+  }));
 
   server.use((req, res, _next) => {
     res.header('Access-Control-Allow-Origin', '*');
@@ -27,6 +29,10 @@ app.prepare().then(async () => {
 
   server.get('/manifest.json', (req, res) => {
     res.sendFile(path.join(__dirname, 'static', 'manifest.json'));
+  });
+
+  server.get('/boards/new', (req, res) => {
+    app.render(req, res, '/boards/new');
   });
 
   server.get('/boards/:id', (req, res) => {

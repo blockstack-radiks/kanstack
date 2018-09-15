@@ -22,6 +22,16 @@ const fetchedModels = (modelName, models) => ({
   models,
 });
 
+const fetchingModel = model => ({
+  type: Constants.FETCHING_MODEL,
+  model,
+});
+
+const fetchedModel = model => ({
+  type: Constants.FETCHED_MODEL,
+  model,
+});
+
 const saveModel = model => async function innerSaveModel(dispatch, getState) {
   const { currentUser } = getState().user;
   model.createdBy = currentUser;
@@ -31,7 +41,7 @@ const saveModel = model => async function innerSaveModel(dispatch, getState) {
   dispatch(savedModel(model));
 };
 
-const fetch = Model => async function innerFetch(dispatch) {
+const fetchList = Model => async function innerfetchList(dispatch) {
   dispatch(fetchingModels(Model));
   const { models } = await Model.fetch();
   console.log(models);
@@ -44,7 +54,14 @@ const fetch = Model => async function innerFetch(dispatch) {
   dispatch(fetchedModels(Model.schema.name, decryptedModels));
 };
 
+const fetchModel = model => async function innerFetchModel(dispatch) {
+  dispatch(fetchingModel(model));
+  await model.fetch();
+  dispatch(fetchedModel(model));
+};
+
 export default {
   saveModel,
-  fetch,
+  fetchList,
+  fetchModel,
 };

@@ -1,8 +1,12 @@
 import uuid from 'uuid/v4';
 import * as blockstack from 'blockstack';
-import merge from 'lodash.merge';
+import merge from 'lodash/merge';
+import PouchDB from 'pouchdb';
+import PouchDebug from 'pouchdb-debug';
 
-import { encryptObject } from './helpers';
+import { encryptObject, decryptObject, authOptions } from './helpers';
+
+PouchDB.plugin(PouchDebug);
 
 export default class Model {
   static apiServer = null;
@@ -20,10 +24,11 @@ export default class Model {
   }
 
   constructor(attrs = {}) {
-    const { schema, defaults } = this.constructor;
+    const { schema, defaults, name } = this.constructor;
     this.schema = schema;
-    this.uuid = attrs.uuid || uuid();
-    this.attrs = merge({}, defaults, attrs);
+    this.id = attrs.id || uuid();
+    const { username } = blockstack.loadUserData();
+    this.attrs = merge({}, defaults, attrs, { createdBy: username, radiksType: name });
   }
 
   hello() {
@@ -34,13 +39,14 @@ export default class Model {
     const { name } = this.schema;
     const url = `${this.constructor.apiServer}/radiks/models/${name}/schema`;
     console.log(url);
-    const data = await request({ uri: url, json: true });
+    const request = await fetch(url);
+    const data = await request.json();
     return data;
   }
 
   save() {
     const encrypted = this.encrypted();
-    return Promise.all([this.saveFile(encrypted), this.saveItem(), this.saveToRadiks(encrypted)]);
+    return Promise.all([this.saveFile(encrypted), this.saveItem(), this.saveToDB(encrypted)]);
   }
 
   encrypted() {
@@ -55,7 +61,7 @@ export default class Model {
   }
 
   blockstackPath() {
-    const path = `${this.schema.name}/${this.uuid}`;
+    const path = `${this.schema.name}/${this.id}`;
     return path;
   }
 
@@ -74,24 +80,46 @@ export default class Model {
     });
   }
 
-  async saveToRadiks(encrypted) {
+  async saveToDB(encrypted) {
+    PouchDB.debug.enable('*');
     console.log(encrypted);
     const filePath = this.blockstackPath();
     const attributes = merge({}, encrypted, { filePath });
     console.log('data for radiks', attributes);
-    const url = this.apiServerPath();
-    console.log(this.createdBy.username);
-    const request = await fetch(url, {
-      method: 'POST',
-      body: JSON.stringify({
-        attributes,
-        username: this.createdBy.username,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
+    const db = this.db();
+    attributes._id = attributes.id;
+    // await logIn(blockstack.loadUserData(), db);
+    // const info = await this.db().info();
+    // console.log('info', info);
+    try {
+      await db.put(attributes);
+    } catch (error) {
+      console.error('Error when saving to PouchDB', error);
+      throw (error);
+    }
+  }
+
+  db() {
+    return this.constructor.db();
+  }
+
+  static db() {
+    return new PouchDB('http://127.0.0.1:5984/kanstack', {
+      auth: {
+        ...authOptions(),
       },
     });
-    return request.json();
+  }
+
+  async fetch() {
+    const attrs = await this.db().get(this.id);
+    this.attrs = merge(attrs, this.attrs);
+    this.decrypt();
+    return this;
+  }
+
+  decrypt() {
+    this.attrs = decryptObject(this.attrs, this.constructor);
   }
 
   apiServerPath(path) {
