@@ -3,20 +3,20 @@ import { signECDSA } from 'blockstack/lib/encryption';
 
 import { sendLoginSignedMessage } from './api';
 
-const valueToString = (value) => {
-  if (typeof value === typeof (true)) {
+const valueToString = (value, clazz) => {
+  if (clazz === Boolean) {
     return value ? 'true' : 'false';
-  } if (typeof value === 'number') {
+  } if (clazz === Number) {
     return String(value);
   }
   return value;
 };
 
-const stringToValue = (value, definition) => {
-  if (definition.stringType === 'boolean') {
+const stringToValue = (value, clazz) => {
+  if (clazz === Boolean) {
     return value === 'true';
   }
-  if (definition.stringType === 'number') {
+  if (clazz === Number) {
     return parseFloat(value);
   }
   return value;
@@ -27,9 +27,13 @@ export const decryptObject = (encrypted, Model) => {
   const { schema } = Model;
   Object.keys(encrypted).forEach((key) => {
     const value = encrypted[key];
-    const definition = schema.attributes[key];
-    if (definition && !definition.decrypted) {
-      decrypted[key] = stringToValue(blockstack.decryptContent(value), definition);
+    const clazz = schema[key];
+    if (clazz && !clazz.decrypted) {
+      try {
+        decrypted[key] = stringToValue(blockstack.decryptContent(value), clazz.type || clazz);
+      } catch (error) {
+        decrypted[key] = value;
+      }
     }
   });
   return decrypted;
@@ -38,10 +42,13 @@ export const decryptObject = (encrypted, Model) => {
 export const encryptObject = (model) => {
   const object = model.attrs;
   const encrypted = Object.assign({}, object, { id: model.id });
-  Object.keys(model.schema.attributes).forEach((key) => {
-    const { decrypted } = model.schema.attributes[key];
+  Object.keys(model.schema).forEach((key) => {
+    const clazz = model.schema[key];
+    const { decrypted } = clazz;
     const value = object[key];
-    encrypted[key] = decrypted ? value : blockstack.encryptContent(valueToString(value));
+    if (typeof (value) !== 'undefined') {
+      encrypted[key] = decrypted ? value : blockstack.encryptContent(valueToString(value, clazz.type || clazz));
+    }
   });
   return encrypted;
 };

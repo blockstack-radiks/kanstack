@@ -3,10 +3,12 @@ import * as blockstack from 'blockstack';
 import merge from 'lodash/merge';
 import PouchDB from 'pouchdb';
 import PouchDebug from 'pouchdb-debug';
+import PouchFind from 'pouchdb-find';
 
 import { encryptObject, decryptObject, authOptions } from './helpers';
 
 PouchDB.plugin(PouchDebug);
+PouchDB.plugin(PouchFind);
 
 export default class Model {
   static apiServer = null;
@@ -21,6 +23,19 @@ export default class Model {
   static async fetch() {
     const request = await fetch(this.apiServerPath());
     return request.json();
+  }
+
+  static async fetchList(selector, options = {}) {
+    selector.radiksType = this.name;
+    const db = this.db();
+    const { docs } = await db.find({ selector, ...options });
+    console.log(docs);
+    const models = docs.map((doc) => {
+      const model = new this(doc);
+      model.decrypt();
+      return model;
+    });
+    return models;
   }
 
   constructor(attrs = {}) {
@@ -61,7 +76,7 @@ export default class Model {
   }
 
   blockstackPath() {
-    const path = `${this.schema.name}/${this.id}`;
+    const path = `${this.constructor.name}/${this.id}`;
     return path;
   }
 
@@ -113,8 +128,11 @@ export default class Model {
 
   async fetch() {
     const attrs = await this.db().get(this.id);
+    console.log('super attrs', attrs);
     this.attrs = merge(attrs, this.attrs);
     this.decrypt();
+    if (this.afterFetch) await this.afterFetch();
+    console.log('back in super', this.attrs);
     return this;
   }
 
@@ -127,7 +145,7 @@ export default class Model {
   }
 
   static apiServerPath(path) {
-    let url = `${this.apiServer}/radiks/models/${this.schema.name}`;
+    let url = `${this.apiServer}/radiks/models/${this.constructor.name}`;
     if (path) {
       url += `/${path}`;
     }

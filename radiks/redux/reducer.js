@@ -16,7 +16,7 @@ const getNewState = (state, name) => {
 export default (state = initialState, action) => {
   switch (action.type) {
     case Constants.SAVING_MODEL: {
-      const { name } = action.model.schema;
+      const { name } = action.model.constructor;
       const newState = getNewState(state, name);
       newState.models[name].currentlySaving = action.model;
       action.model.currentlySaving = true;
@@ -26,7 +26,7 @@ export default (state = initialState, action) => {
       };
     }
     case Constants.SAVED_MODEL: {
-      const { name } = action.model.schema;
+      const { name } = action.model.constructor;
       const newState = getNewState(state, name);
       newState.models[name].currentlySaving = false;
       action.model.currentlySaving = false;
@@ -45,7 +45,7 @@ export default (state = initialState, action) => {
       };
     }
     case Constants.FETCHING_MODELS: {
-      const { name } = action.model.schema;
+      const { name } = action.model.constructor;
       const newState = getNewState(state, name);
       newState.models[name].isFetchingModels = true;
       return {
@@ -54,7 +54,7 @@ export default (state = initialState, action) => {
     }
     case Constants.FETCHING_MODEL: {
       const { model } = action;
-      const { name } = model.schema;
+      const { name } = model.constructor;
       const newState = getNewState(state, name);
       newState.models[name].byId[model.id] = model;
       return {
@@ -63,7 +63,7 @@ export default (state = initialState, action) => {
     }
     case Constants.FETCHED_MODEL: {
       const { model } = action;
-      const { name } = model.schema;
+      const { name } = model.constructor;
       const newState = getNewState(state, name);
       newState.models[name].byId[model.id] = model;
       return {

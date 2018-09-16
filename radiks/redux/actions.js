@@ -51,12 +51,13 @@ const fetchList = Model => async function innerfetchList(dispatch) {
     return new Model(decrypted);
   });
   console.log(decryptedModels);
-  dispatch(fetchedModels(Model.schema.name, decryptedModels));
+  dispatch(fetchedModels(Model.constructor, decryptedModels));
 };
 
 const fetchModel = model => async function innerFetchModel(dispatch) {
   dispatch(fetchingModel(model));
   await model.fetch();
+  console.log(model);
   dispatch(fetchedModel(model));
 };
 

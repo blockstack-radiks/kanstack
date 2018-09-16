@@ -1,0 +1,26 @@
+{
+  "name": "Card",
+  "attributes": {
+    "name": {
+      "name": "name",
+      "type": "string"
+    },
+    "status": {
+      "name": "status",
+      "type": "string"
+    },
+    "order": {
+      "name": "order",
+      "type": "number"
+    },
+    "boardId": {
+      "name": "boardId",
+      "type": "string",
+      "decrypted": true
+    },
+    "description": {
+      "name": "description",
+      "type": "string"
+    }
+  }
+}
