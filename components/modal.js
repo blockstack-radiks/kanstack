@@ -23,7 +23,7 @@ class Modal extends React.Component {
     if (!isOpen) return '';
     return (
       <StyledModal>
-        <Content width={[1, 0.64, 0.65, 0.5]} px={3} pb={3}>
+        <Content width={[1, 0.64, 0.65, 0.5]} px={3} py={3}>
           <CloseButton onClick={() => { this.props.onClose(); }}>
             <FontAwesomeIcon icon={faTimes} />
           </CloseButton>
