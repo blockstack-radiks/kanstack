@@ -2,7 +2,7 @@ export const selectModel = (state, model) => state.radiks.models[model];
 
 export const selectCurrentlySavingModel = (state, modelName) => {
   const model = selectModel(state, modelName);
-  return model && model.currentlySaving;
+  return !!model && !!model.currentlySaving;
 };
 
 export const selectModelById = (state, modelName, id) => {
@@ -12,7 +12,7 @@ export const selectModelById = (state, modelName, id) => {
 
 export const selectModelsById = (state, modelName) => {
   const model = selectModel(state, modelName);
-  console.log(state, model);
+  // console.log(state, model);
   return model && model.byId;
 };
 
@@ -24,4 +24,9 @@ export const selectModels = (state, modelName) => {
 export const selectIsFetchingModels = (state, modelName) => {
   const model = selectModel(state, modelName);
   return model && model.isFetchingModels;
+};
+
+export const selectSelectedModel = (state, modelName) => {
+  const model = selectModel(state, modelName);
+  return model && model.selectedModel;
 };

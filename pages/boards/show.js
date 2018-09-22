@@ -55,14 +55,24 @@ class ShowBoard extends React.Component {
     }
   }
 
-  onDragEnd = (result) => {
+  saveListOrder = cards => cards.map((card, index) => new Promise(async (resolve, reject) => {
+    try {
+      card.attrs.order = index;
+      await card.save();
+      resolve();
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  }))
+
+  onDragEnd = async (result) => {
     const { source, destination } = result;
 
     if (!destination) return;
 
     if (source.droppableId === destination.droppableId) {
       console.log('Reordering the same list');
-      // same list, reorder just this list
       const status = source.droppableId;
       const cards = Array.from(this.state.groupedCards[status]);
       const [moved] = cards.splice(source.index, 1);
@@ -70,17 +80,24 @@ class ShowBoard extends React.Component {
       const { groupedCards } = this.state;
       groupedCards[status] = cards;
       this.setState({ groupedCards });
-      const savePromises = cards.map((card, index) => new Promise(async (resolve, reject) => {
-        try {
-          card.attrs.order = index;
-          await card.save();
-          resolve();
-        } catch (error) {
-          console.log(error);
-          reject(error);
-        }
-      }));
-      Promise.all(savePromises);
+      const savePromises = this.saveListOrder(cards);
+      await Promise.all(savePromises);
+      this.setState({ groupedCards });
+    } else {
+      console.log('Moving to a different list');
+      const { groupedCards } = this.state;
+      const fromList = groupedCards[source.droppableId];
+      const toList = groupedCards[destination.droppableId];
+      const [card] = fromList.splice(source.index, 1);
+      card.attrs.status = destination.droppableId;
+      toList.splice(destination.index, 0, card);
+      groupedCards[source.droppableId] = fromList;
+      groupedCards[destination.droppableId] = toList;
+      this.setState({ groupedCards });
+      let savePromises = this.saveListOrder(fromList);
+      savePromises = savePromises.concat(this.saveListOrder(toList));
+      await Promise.all(savePromises);
+      this.setState({ groupedCards });
     }
   }
 
@@ -96,11 +113,19 @@ class ShowBoard extends React.Component {
     return grouped;
   }
 
-  newCard(card) {
-    console.log(card);
+  newCard(card, isNew) {
     this.setState({
       modalIsOpen: false,
     });
+    let { groupedCards } = this.state;
+    if (isNew) {
+      groupedCards[card.attrs.status].unshift(card);
+    } else {
+      const cardIndex = this.props.cards.findIndex(_card => card.id === _card.id);
+      this.props.cards[cardIndex] = card;
+      groupedCards = this.groupedCards(this.props.cards);
+    }
+    this.setState({ groupedCards });
   }
 
   render() {

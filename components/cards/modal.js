@@ -12,12 +12,18 @@ import Button from '../../styled/button';
 import Text from '../../styled/typography';
 
 import Card from '../../models/card';
-import { decryptObject } from '../../radiks/helpers';
 
 import RadiksActions from '../../radiks/redux/actions';
 import {
-  selectModelsById,
+  selectModelsById, selectCurrentlySavingModel, selectSelectedModel,
 } from '../../radiks/redux/selectors';
+
+const defaultState = {
+  name: '',
+  status: 'todo',
+  cardId: null,
+  card: null,
+};
 
 class CardModal extends React.Component {
   static propTypes = {
@@ -27,50 +33,55 @@ class CardModal extends React.Component {
     boardId: PropTypes.string.isRequired,
     cardsById: PropTypes.object,
     saveModel: PropTypes.func.isRequired,
+    currentlySaving: PropTypes.bool.isRequired,
+    selectedCard: PropTypes.object,
+    deselectModel: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
     isOpen: false,
     cardsById: {},
+    selectedCard: null,
   }
 
-  state = {
-    name: '',
-    status: 'todo',
-    cardId: null,
-    card: null,
-  }
+  state = defaultState
 
   componentWillReceiveProps(nextProps) {
-    // const { cardsById } = nextProps;
     const card = nextProps.cardsById[this.state.cardId];
-    if (!this.state.card && card) {
-      if (card.currentlySaving) {
-        this.setState({
-          card,
-        });
-        this.props.onSave(card);
-      } else {
-        console.log('saved!');
-        this.setState({
-          cardId: null,
-          card: null,
-        });
-      }
+    if (!this.state.cardId && nextProps.selectedCard) {
+      const { name, id, status } = nextProps.selectedCard.attrs;
+      this.setState({
+        name,
+        status,
+        cardId: id,
+      });
+    } else if (this.props.currentlySaving && !nextProps.currentlySaving) {
+      console.log('saved!');
+      this.props.onSave(card, !this.props.selectedCard);
+      this.props.deselectModel(card);
+      this.setState(defaultState);
+    } else if (!this.state.card && card) {
+      this.setState({
+        card,
+      });
     }
+  }
+
+  onClose() {
+    if (this.props.selectedCard) {
+      this.props.deselectModel(this.props.selectedCard);
+    }
+    this.props.onClose();
   }
 
   save() {
     const { name, status } = this.state;
-    const card = new Card({
+    const card = this.props.selectedCard || new Card({ boardId: this.props.boardId });
+    card.update({
       name,
       status,
-      boardId: this.props.boardId,
     });
-    // console.log(card);
-    // console.log(card.encrypted());
-    // console.log(decryptObject(card.encrypted(), card.constructor));
-    // console.log(card.schema);
+    console.log(card.attrs);
     this.setState({
       cardId: card.id,
     }, () => {
@@ -130,10 +141,10 @@ class CardModal extends React.Component {
   }
 
   render() {
-    const { isOpen, onClose } = this.props;
+    const { isOpen, selectedCard } = this.props;
     const { card } = this.state;
     return (
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen || !!selectedCard} onClose={() => this.onClose()}>
         {card ? this.savingView() : this.form()}
       </Modal>
     );
@@ -142,6 +153,8 @@ class CardModal extends React.Component {
 
 const mapStateToProps = state => ({
   cardsById: selectModelsById(state, 'Card'),
+  currentlySaving: selectCurrentlySavingModel(state, 'Card'),
+  selectedCard: selectSelectedModel(state, 'Card'),
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(Object.assign({}, RadiksActions), dispatch);

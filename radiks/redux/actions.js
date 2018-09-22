@@ -32,32 +32,42 @@ const fetchedModel = model => ({
   model,
 });
 
+const selectModel = model => ({
+  type: Constants.SELECT_MODEL,
+  model,
+});
+
+const deselectModel = model => ({
+  type: Constants.DESELECT_MODEL,
+  model,
+});
+
 const saveModel = model => async function innerSaveModel(dispatch, getState) {
   const { currentUser } = getState().user;
   model.createdBy = currentUser;
   dispatch(savingModel(model));
-  const [file, items] = await model.save();
-  console.log(file, items);
+  await model.save();
+  // console.log(file, items);
   dispatch(savedModel(model));
 };
 
 const fetchList = Model => async function innerfetchList(dispatch) {
   dispatch(fetchingModels(Model));
   const { models } = await Model.fetch();
-  console.log(models);
+  // console.log(models);
   const decryptedModels = models.map((object) => {
     const decrypted = decryptObject(object, Model);
-    console.log(decrypted);
+    // console.log(decrypted);
     return new Model(decrypted);
   });
-  console.log(decryptedModels);
+  // console.log(decryptedModels);
   dispatch(fetchedModels(Model.constructor, decryptedModels));
 };
 
 const fetchModel = model => async function innerFetchModel(dispatch) {
   dispatch(fetchingModel(model));
   await model.fetch();
-  console.log(model);
+  // console.log(model);
   dispatch(fetchedModel(model));
 };
 
@@ -65,4 +75,6 @@ export default {
   saveModel,
   fetchList,
   fetchModel,
+  selectModel,
+  deselectModel,
 };

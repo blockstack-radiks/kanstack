@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Box } from 'grid-styled';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 
-import { Card } from '../../styled/cards';
+import Card from './show';
 
 class CardList extends React.Component {
   static propTypes = {
@@ -24,6 +24,7 @@ class CardList extends React.Component {
             innerRef={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
+            card={card}
             // style={provided.draggableProps.style}
           >
             {card.attrs.name}

@@ -70,6 +70,22 @@ export default (state = initialState, action) => {
         ...newState,
       };
     }
+    case Constants.SELECT_MODEL: {
+      const { model } = action;
+      const { name } = model.constructor;
+      const newState = getNewState(state, name);
+      newState.models[name].selectedModel = model;
+      return {
+        ...newState,
+      };
+    }
+    case Constants.DESELECT_MODEL: {
+      const { model } = action;
+      const { name } = model.constructor;
+      const newState = getNewState(state, name);
+      newState.models[name].selectedModel = null;
+      return { ...newState };
+    }
     default:
       return state;
   }
