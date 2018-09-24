@@ -12,6 +12,8 @@ const Button = sys({
   bg: 'rgba(0,0,0,0.6)',
   borderRadius: 2,
   border: 0,
-});
+}, ({ theme }) => ({
+  color: theme.colors.lightgray,
+}));
 
 export default Button;

@@ -1,4 +1,4 @@
-import Model from '../radiks/model';
+import Model from 'radiks/lib/model';
 import Card from './card';
 
 export default class Board extends Model {

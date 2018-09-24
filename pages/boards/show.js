@@ -6,6 +6,11 @@ import { Flex, Box } from 'grid-styled';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { DragDropContext } from 'react-beautiful-dnd';
+import RadiksActions from 'radiks/lib/redux/actions';
+import {
+  selectModelById,
+} from 'radiks/lib/redux/selectors';
+import { withTheme } from 'styled-components';
 
 import Layout from '../../components/layout';
 import CardModal from '../../components/cards/modal';
@@ -13,11 +18,6 @@ import CardList from '../../components/cards/list';
 
 import Board from '../../models/board';
 import { Header, ListHeader, AddCardButton } from '../../styled/board';
-
-import RadiksActions from '../../radiks/redux/actions';
-import {
-  selectModelById,
-} from '../../radiks/redux/selectors';
 
 class ShowBoard extends React.Component {
   static getInitialProps({ query }) {
@@ -117,6 +117,7 @@ class ShowBoard extends React.Component {
     this.setState({
       modalIsOpen: false,
     });
+    console.log('newCard', isNew);
     let { groupedCards } = this.state;
     if (isNew) {
       groupedCards[card.attrs.status].unshift(card);
@@ -129,7 +130,7 @@ class ShowBoard extends React.Component {
   }
 
   render() {
-    const { boardAttrs } = this.props;
+    const { boardAttrs, theme } = this.props;
     const { name } = boardAttrs;
     const cardsByStatus = this.state.groupedCards;
     return (
@@ -145,19 +146,20 @@ class ShowBoard extends React.Component {
         <Flex>
           <DragDropContext onDragEnd={this.onDragEnd}>
             <Box width={[1 / 3]}>
-              <ListHeader bg="rgba(187, 107, 217, .31)">
+              {/* <ListHeader color="rgba(187, 107, 217, .31)"> */}
+              <ListHeader color={theme.solarized.violet}>
                 todo
               </ListHeader>
               <CardList cards={cardsByStatus.todo} status="todo" />
             </Box>
             <Box width={[1 / 3]}>
-              <ListHeader bg="rgba(242, 153, 73, .3)">
+              <ListHeader color={theme.solarized.magenta}>
                 doing
               </ListHeader>
               <CardList cards={cardsByStatus.doing} status="doing" />
             </Box>
             <Box width={[1 / 3]}>
-              <ListHeader bg="rgba(39, 174, 96, .39)">
+              <ListHeader color={theme.solarized.green} last>
                 done
               </ListHeader>
               <CardList cards={cardsByStatus.done} status="done" />
@@ -167,7 +169,7 @@ class ShowBoard extends React.Component {
         <CardModal
           isOpen={this.state.modalIsOpen}
           onClose={() => this.setState({ modalIsOpen: false })}
-          onSave={data => this.newCard(data)}
+          onSave={(data, isNew) => this.newCard(data, isNew)}
           boardId={this.props.boardId}
         />
 
@@ -187,4 +189,4 @@ const mapStateToProps = (state, props) => {
 
 const mapDispatchToProps = dispatch => bindActionCreators(Object.assign({}, RadiksActions), dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(ShowBoard);
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme(ShowBoard));

@@ -2,43 +2,43 @@ import styled from 'styled-components';
 import { baseProps } from './headings';
 
 const P = styled.p`
-  ${baseProps};
+  ${({ theme }) => baseProps(theme)};
 `;
 
 const Span = styled.span`
-  ${baseProps};
+  ${({ theme }) => baseProps(theme)};
 `;
 
 const Body = styled.div`
-  ${baseProps};
+  ${({ theme }) => baseProps(theme)};
 `;
 
 const Strong = styled.strong`
-  ${baseProps};
+  ${({ theme }) => baseProps(theme)};
   font-weight: 500;
 `;
 
 const Em = styled.em`
-  ${baseProps};
+  ${({ theme }) => baseProps(theme)};
 `;
 const Ul = styled.ul`
-  ${baseProps};
+  ${({ theme }) => baseProps(theme)};
 `;
 const Ol = styled.ol`
-  ${baseProps};
+  ${({ theme }) => baseProps(theme)};
 `;
 
 const Li = styled.li`
-  ${baseProps};
+  ${({ theme }) => baseProps(theme)};
 `;
 
 const Pre = styled.pre`
-  ${baseProps};
+  ${({ theme }) => baseProps(theme)};
 `;
 
 const Small = styled.small`
   font-size: 12px;
-  ${baseProps};
+  ${({ theme }) => baseProps(theme)};
 `;
 
 Body.p = P;

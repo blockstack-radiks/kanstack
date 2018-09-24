@@ -1,6 +1,4 @@
-import Model from '../radiks/model';
-
-// import CardSchema from '../schemas/Card.json';
+import Model from 'radiks/lib/model';
 
 export default class Card extends Model {
   static schema = {

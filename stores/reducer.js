@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
+import RadiksReducer from 'radiks/lib/redux/reducer';
+
 import UserReducer from './user/reducer';
-import RadiksReducer from '../radiks/redux/reducer';
 
 export default combineReducers({
   user: UserReducer,

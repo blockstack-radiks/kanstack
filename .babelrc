@@ -1,0 +1,17 @@
+{
+  "presets": [
+    [
+      "next/babel",
+      {
+        "preset-env": {
+          "exclude": [
+            
+          ]
+        }
+      }
+    ]
+  ],
+  "plugins": [
+    
+  ]
+}

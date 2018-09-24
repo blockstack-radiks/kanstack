@@ -3,11 +3,14 @@ import Document, { Head, Main, NextScript } from 'next/document';
 import { injectGlobal, ServerStyleSheet } from 'styled-components';
 import { normalize } from 'polished';
 
+import theme from '../styled/theme';
+
 // eslint-disable-next-line no-unused-expressions
 injectGlobal`
   ${normalize()}
   body, html{
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    background-color: ${theme.colors.dark};
   }
 `;
 

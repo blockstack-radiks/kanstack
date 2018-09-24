@@ -17,8 +17,8 @@ import {
   fontStyle,
 } from 'styled-system';
 
-export const baseProps = css`
-  color: rgba(20, 33, 68, 1);
+export const baseProps = theme => css`
+  color: ${theme.colors.lightgray};
   ${color};
   ${fontSize};
   ${fontWeight};
@@ -37,29 +37,31 @@ export const baseProps = css`
   ${fontStyle};
 `;
 
-const headerProps = css`
+const headerProps = theme => css`
   // font-family: 'Plex', monospace;
-  ${baseProps};
+  font-weight: 500;
+  ${baseProps(theme)};
 `;
+
 const H1 = styled.h1`
-  ${headerProps};
+  ${({ theme }) => headerProps(theme)};
 `;
 const H2 = styled.h2`
-  ${headerProps};
+  ${({ theme }) => headerProps(theme)};
 `;
 const H3 = styled.h3`
-  ${headerProps};
+  ${({ theme }) => headerProps(theme)};
 `;
 const H4 = styled.h4`
-  ${headerProps};
+  ${({ theme }) => headerProps(theme)};
 `;
 const H5 = styled.h5`
-  ${headerProps};
+  ${({ theme }) => headerProps(theme)};
 `;
 const H6 = styled.h6`
-  ${headerProps};
+  ${({ theme }) => headerProps(theme)};
 `;
 
 export {
- H1, H2, H3, H4, H5, H6 
+  H1, H2, H3, H4, H5, H6,
 };

@@ -4,10 +4,10 @@ import { withRouter } from 'next/router';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { ThemeProvider } from 'styled-components';
+import Model from 'radiks/lib/model';
 
 import withReduxStore from '../lib/with-redux-store';
-
-import Model from '../radiks/model';
+import theme from '../styled/theme';
 
 Model.apiServer = 'http://localhost:3000';
 
@@ -33,7 +33,7 @@ class MyApp extends App {
     } = this.props;
 
     return (
-      <ThemeProvider theme={{}}>
+      <ThemeProvider theme={theme}>
         <Container>
           <Provider store={reduxStore}>
             <PersistGate persistor={persistor}>

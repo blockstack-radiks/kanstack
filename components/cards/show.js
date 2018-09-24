@@ -2,9 +2,9 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import omit from 'lodash/omit';
+import RadiksActions from 'radiks/lib/redux/actions';
 
 import { Card as StyledCard } from '../../styled/cards';
-import RadiksActions from '../../radiks/redux/actions';
 
 class Card extends React.Component {
   onClick = (event) => {

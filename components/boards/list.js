@@ -1,5 +1,4 @@
 import React from 'react';
-import { Text } from 'rebass';
 import { Flex, Box } from 'grid-styled';
 import Link from 'next/link';
 import { connect } from 'react-redux';
@@ -7,6 +6,7 @@ import PropTypes from 'prop-types';
 
 import { CardLink } from '../card';
 import Board from '../../models/board';
+import Type from '../../styled/typography';
 
 class BoardsList extends React.Component {
   static propTypes = {
@@ -29,9 +29,9 @@ class BoardsList extends React.Component {
       <Box width={1 / 3} mt={4} key={board.id} mx={3}>
         <Link href={`/boards/${board.id}`} passHref>
           <CardLink>
-            <Text textAlign="center">
+            <Type.p my={1} p={0} textAlign="center">
               {board.attrs.name}
-            </Text>
+            </Type.p>
           </CardLink>
         </Link>
       </Box>
@@ -40,18 +40,21 @@ class BoardsList extends React.Component {
 
   render() {
     return (
-      <Flex flexDirection="row">
-        {this.boards()}
-        <Box width={1 / 3} mt={4}>
-          <Link href="/boards/new" passHref>
-            <CardLink>
-              <Text textAlign="center">
-                Add a Board
-              </Text>
-            </CardLink>
-          </Link>
-        </Box>
-      </Flex>
+      <>
+        <Type.h1>Your Boards</Type.h1>
+        <Flex flexDirection="row">
+          {this.boards()}
+          <Box width={1 / 3} mt={4}>
+            <Link href="/boards/new" passHref>
+              <CardLink>
+                <Type.p my={1} p={0} textAlign="center">
+                  Add a Board
+                </Type.p>
+              </CardLink>
+            </Link>
+          </Box>
+        </Flex>
+      </>
     );
   }
 }

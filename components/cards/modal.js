@@ -5,6 +5,11 @@ import { bindActionCreators } from 'redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
+import RadiksActions from 'radiks/lib/redux/actions';
+import {
+  selectModelsById, selectCurrentlySavingModel, selectSelectedModel,
+} from 'radiks/lib/redux/selectors';
+
 import Modal from '../modal';
 import Input from '../input';
 import { Select, Label } from '../../styled/form';
@@ -12,11 +17,6 @@ import Button from '../../styled/button';
 import Text from '../../styled/typography';
 
 import Card from '../../models/card';
-
-import RadiksActions from '../../radiks/redux/actions';
-import {
-  selectModelsById, selectCurrentlySavingModel, selectSelectedModel,
-} from '../../radiks/redux/selectors';
 
 const defaultState = {
   name: '',

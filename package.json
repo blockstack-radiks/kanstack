@@ -7,6 +7,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@babel/plugin-transform-classes": "^7.1.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.4",
     "@fortawesome/free-solid-svg-icons": "^5.3.1",
     "@fortawesome/react-fontawesome": "^0.1.3",
@@ -15,6 +16,7 @@
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
     "grid-styled": "^5.0.2",
+    "hard-source-webpack-plugin": "0.12.0",
     "history": "^4.7.2",
     "lodash": "^4.17.10",
     "lodash.merge": "^4.6.1",
@@ -25,6 +27,7 @@
     "pouchdb-debug": "^7.0.0",
     "pouchdb-find": "^7.0.0",
     "prop-types": "^15.6.2",
+    "radiks": "file:../radiks",
     "radiks-server": "file:../server",
     "react": "^16.4.2",
     "react-beautiful-dnd": "^9.0.2",

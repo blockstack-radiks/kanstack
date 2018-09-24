@@ -4,20 +4,23 @@ import PropTypes from 'prop-types';
 
 import Head from './head';
 import Nav from './nav';
+import { Body } from '../styled/layout';
 
 const Layout = ({ children, useContainer = true }) => (
   <>
     <Head />
     <Nav />
-    { useContainer ? (
-      <Container pt={4}>
-        {children}
-      </Container>
-    ) : (
-      <>
-        {children}
-      </>
-    )}
+    <Body id="body">
+      {useContainer ? (
+        <Container pt={4}>
+          {children}
+        </Container>
+      ) : (
+        <>
+          {children}
+        </>
+      )}
+    </Body>
   </>
 );
 

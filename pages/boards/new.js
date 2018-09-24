@@ -1,22 +1,24 @@
 import React from 'react';
 import {
-  Flex, Box, Text, Button,
+  Flex, Box, Text,
 } from 'rebass';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import Router from 'next/router';
 
+import RadiksActions from 'radiks/lib/redux/actions';
+import {
+  selectModelsById,
+} from 'radiks/lib/redux/selectors';
+
 import Head from '../../components/head';
 import Nav from '../../components/nav';
 import { Card } from '../../components/card';
 import Input from '../../components/input';
 import Board from '../../models/board';
-
-import RadiksActions from '../../radiks/redux/actions';
-import {
-  selectModelsById,
-} from '../../radiks/redux/selectors';
+import Type from '../../styled/typography';
+import Button from '../../styled/button';
 
 class NewBoard extends React.Component {
   state = {
@@ -63,7 +65,7 @@ class NewBoard extends React.Component {
               }}
               >
                 <Text textAlign="center">
-                  <Text fontSize={3}>Create a Board</Text>
+                  <Type.p fontSize={3}>Create a Board</Type.p>
                   <Input
                     type="text"
                     mt={3}

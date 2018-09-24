@@ -64,12 +64,15 @@ export const Backdrop = styled.div`
 `;
 
 export const Content = styled(Box)`
-  background-color: white;
+  // background-color: white;
+  ${({ theme }) => css`
+    background-color: ${theme.colors.gray}
+  `}
   border-radius: 4px;
   position: relative;
   z-index: 10;
   max-width: 40em;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   @media (max-width: 700px) {
     min-height: 100vh;
   }
