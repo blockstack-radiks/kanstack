@@ -48,7 +48,7 @@ class ShowBoard extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if ((nextProps.cards.length > 0) && !this.state.groupedCards.todo) {
+    if (!this.state.groupedCards.todo) {
       this.setState({
         groupedCards: this.groupedCards(nextProps.cards),
       });
@@ -117,7 +117,7 @@ class ShowBoard extends React.Component {
     this.setState({
       modalIsOpen: false,
     });
-    console.log('newCard', isNew);
+    console.log('newCard', isNew, card);
     let { groupedCards } = this.state;
     if (isNew) {
       groupedCards[card.attrs.status].unshift(card);

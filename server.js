@@ -17,6 +17,7 @@ app.prepare().then(async () => {
 
   server.use('/radiks', setup({
     databaseName: 'kanstack',
+    databaseUrl: 'http://localhost:5984',
     adminUser: process.env.COUCHDB_ADMIN,
     adminPassword: process.env.COUCHDB_PASSWORD,
   }));

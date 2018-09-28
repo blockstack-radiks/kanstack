@@ -1,6 +1,15 @@
 const { getDB } = require('radiks-server');
 require('dotenv').config();
 
+const deleteAll = async (db, type) => {
+  const { docs } = await db.find({
+    selector: {
+      radiksType: type,
+    },
+  });
+  return docs.map(doc => db.remove(doc));
+};
+
 const setup = async () => {
   const auth = {
     databaseName: 'kanstack',
@@ -8,17 +17,8 @@ const setup = async () => {
     adminPassword: process.env.COUCHDB_PASSWORD,
   };
   const db = getDB(auth);
-  const { docs } = await db.find({
-    selector: {
-      radiksType: 'Card',
-    },
-  });
-  const deletes = docs.map((doc) => {
-    console.log(doc);
-    return db.remove(doc);
-  });
-  await Promise.all(deletes);
-  // console.log(docs[0]);
+  await Promise.all(await deleteAll(db, 'Board'));
+  await Promise.all(await deleteAll(db, 'Card'));
 };
 
 setup().catch((e) => {
