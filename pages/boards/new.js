@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Flex, Box, Text,
+  Flex, Box,
 } from 'rebass';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -64,17 +64,15 @@ class NewBoard extends React.Component {
                 this.save(evt);
               }}
               >
-                <Text textAlign="center">
-                  <Type.p fontSize={3}>Create a Board</Type.p>
-                  <Input
-                    type="text"
-                    mt={3}
-                    value={this.state.name}
-                    placeholder="Board Name"
-                    onChange={evt => this.setState({ name: evt.target.value })
-                  }
-                  />
-                </Text>
+                <Type.p fontSize={3} mt={0}>Create a Board</Type.p>
+                <Input
+                  type="text"
+                  mt={3}
+                  value={this.state.name}
+                  placeholder="Board Name"
+                  onChange={evt => this.setState({ name: evt.target.value })
+                }
+                />
                 <Button mt={4} d="block" width="100%">Submit</Button>
               </form>
             </Card>

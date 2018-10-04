@@ -19,6 +19,8 @@ const setup = async () => {
   const db = getDB(auth);
   await Promise.all(await deleteAll(db, 'Board'));
   await Promise.all(await deleteAll(db, 'Card'));
+  await Promise.all(await deleteAll(db, 'GroupMembership'));
+  await Promise.all(await deleteAll(db, 'Project'));
 };
 
 setup().catch((e) => {

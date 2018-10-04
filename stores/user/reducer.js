@@ -1,7 +1,8 @@
+import { User } from 'radiks';
 import * as Constants from './constants';
 
 const initialState = {
-  currentUser: null,
+  currentUser: User.currentUser(),
 };
 
 export default (state = initialState, action) => {

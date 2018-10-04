@@ -60,7 +60,8 @@ class BoardsList extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  username: state.user.currentUser.username,
+  user: state.user.currentUser,
+  username: state.user.currentUser.attrs.username,
 });
 
 export default connect(mapStateToProps)(BoardsList);

@@ -4,12 +4,14 @@ import { withRouter } from 'next/router';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { ThemeProvider } from 'styled-components';
-import Model from 'radiks/lib/model';
+// import Model from 'radiks/lib/model';
+import { configure } from 'radiks';
 
 import withReduxStore from '../lib/with-redux-store';
 import theme from '../styled/theme';
+import getRadiksConfig from '../lib/radiks-config';
 
-Model.apiServer = 'http://localhost:3000';
+// Model.apiServer = 'http://localhost:3000';
 
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {
@@ -25,6 +27,10 @@ class MyApp extends App {
     }
 
     return { pageProps, cookies };
+  }
+
+  componentDidMount() {
+    configure(getRadiksConfig());
   }
 
   render() {

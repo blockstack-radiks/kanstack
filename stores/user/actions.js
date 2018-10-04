@@ -1,5 +1,5 @@
 import * as blockstack from 'blockstack';
-import { signUp } from 'radiks/lib/helpers';
+import { User } from 'radiks';
 
 import * as Constants from './constants';
 
@@ -33,11 +33,11 @@ const handleLogIn = () => async function innerHandleSignIn(dispatch) {
   dispatch(loggingIn());
   let userData = blockstack.loadUserData();
   if (userData) {
-    dispatch(gotUserData((userData)));
+    dispatch(gotUserData((User.currentUser())));
   } else if (blockstack.isSignInPending()) {
     userData = await blockstack.handlePendingSignIn();
-    await signUp(userData);
-    dispatch(gotUserData((userData)));
+    const user = await User.createWithCurrentUser();
+    dispatch(gotUserData((user)));
   }
 };
 

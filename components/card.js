@@ -1,20 +1,20 @@
 import Styled, { css } from 'styled-components';
-import { width, padding } from 'styled-system';
+import { width, space } from 'styled-system';
 
 export const Card = Styled.div`
   ${width}
-  ${padding}
+  ${space}
   ${({ theme }) => css`
     background: ${theme.colors.black2};
     color: ${theme.colors.lightgray};
     box-shadow: 0 0 2px ${theme.colors.black3};
   `}
   border-radius: 2px;
-  padding: 10px 15px;
+  text-align: ${({ textAlign }) => textAlign || 'left'};
 `;
 
 Card.defaultProps = {
-  p: 2,
+  p: 3,
 };
 
 export default Card;

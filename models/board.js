@@ -1,10 +1,7 @@
 import Model from 'radiks/lib/model';
-import config from './config';
 import Card from './card';
 
 export default class Board extends Model {
-  static config = config()
-
   static schema = {
     name: String,
   }

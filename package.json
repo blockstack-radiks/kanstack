@@ -57,8 +57,7 @@
     "verbose": true,
     "watch": [
       "./",
-      "../server",
-      "../radiks/lib"
+      "../server"
     ],
     "ignore": [
       ".next/*",
@@ -67,8 +66,7 @@
       "components/*",
       "styled/*",
       "models",
-      "scripts",
-      "../radiks/src"
+      "scripts"
     ]
   }
 }
