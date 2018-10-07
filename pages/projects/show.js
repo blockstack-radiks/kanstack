@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
-import { User } from 'radiks';
+import { User, UserGroup } from 'radiks';
 import { Flex, Box } from 'grid-styled';
 import Link from 'next/link';
 
@@ -16,39 +16,31 @@ import Card, { CardLink } from '../../components/card';
 
 class ShowProject extends React.Component {
   static propTypes = {
-    fetchUserGroup: PropTypes.func.isRequired,
     groupId: PropTypes.string.isRequired,
-    userGroup: PropTypes.object,
-    isFetching: PropTypes.bool,
-  }
-
-  static defaultProps = {
-    userGroup: null,
-    isFetching: true,
   }
 
   state = {
     users: [],
+    userGroup: null,
+    isFetching: true,
   }
 
   static getInitialProps({ query }) {
+    console.log(query);
     return {
       groupId: query.id,
     };
   }
 
-  componentDidMount() {
-    this.props.fetchUserGroup(this.props.groupId);
+  async componentWillMount() {
+    const userGroup = await UserGroup.find(this.props.groupId);
+    this.setState({ userGroup });
+    await this.fetchUsers(userGroup);
+    this.setState({ isFetching: false });
   }
 
-  async componentWillReceiveProps(nextProps) {
-    if (!this.props.userGroup && nextProps.userGroup) {
-      this.fetchUsers(nextProps);
-    }
-  }
-
-  async fetchUsers(nextProps) {
-    const { members } = nextProps.userGroup.attrs;
+  async fetchUsers(userGroup) {
+    const { members } = userGroup.attrs;
     const ids = [];
     members.forEach((member) => {
       ids.push({ _id: member.username });
@@ -96,7 +88,7 @@ class ShowProject extends React.Component {
   }
 
   project() {
-    const project = this.props.userGroup;
+    const project = this.state.userGroup;
     return (
       <>
         <Type.h2>{project.attrs.name}</Type.h2>
@@ -112,7 +104,8 @@ class ShowProject extends React.Component {
   render() {
     return (
       <Layout>
-        {this.props.userGroup ? this.project() : <Loading text="Fetching your project..." /> }
+        {/* {this.state.userGroup ? this.project() : <Loading text="Fetching your project..." /> } */}
+        {this.state.isFetching ? <Loading text="Fetching your project..." /> : this.project() }
       </Layout>
     );
   }

@@ -46,6 +46,7 @@ app.prepare().then(async () => {
   });
 
   server.get('/projects/:id', (req, res) => {
+    console.log('project#show');
     const { params } = req;
     app.render(req, res, '/projects/show', params);
   });

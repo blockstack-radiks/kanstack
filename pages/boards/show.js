@@ -21,6 +21,7 @@ import { Header, ListHeader, AddCardButton } from '../../styled/board';
 
 class ShowBoard extends React.Component {
   static getInitialProps({ query }) {
+    console.log('board init props');
     return {
       boardId: query.id,
     };

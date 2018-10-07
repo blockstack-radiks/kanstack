@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import { Flex, Box } from 'grid-styled';
 import { loadUserData } from 'blockstack/lib/auth/authApp';
 import { decryptECIES, signECDSA } from 'blockstack/lib/encryption';
+import Router from 'next/router';
 
 import RadiksActions from 'radiks/lib/redux/actions';
 import {
@@ -33,21 +34,29 @@ class NewProject extends React.Component {
 
   save = async (evt) => {
     evt.preventDefault();
+    NProgress.start();
     const project = new Project({
       name: this.state.name,
     });
     // await project.save();
     await project.create();
+    Router.push({
+      pathname: '/projects/show',
+      query: {
+        id: project.id,
+      },
+    }, `/projects/${project.id}`);
+
     // console.log(project)
-    console.log(project.publicKey());
-    console.log(project);
+    // console.log(project.publicKey());
+    // console.log(project);
     // console.log(await project.makeGaiaConfig());
     // const { encryptedGroupPrivateKey } = project;
     // const { appPrivateKey, username } = loadUserData();
     // console.log(decryptECIES(appPrivateKey, encryptedGroupPrivateKey));
 
     // console.log(await project.makeGroupMembership(username));
-    this.setState({ projectId: project.id });
+    // this.setState({ projectId: project.id });
   }
 
   render() {
