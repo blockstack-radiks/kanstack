@@ -27,6 +27,8 @@ export default class MyDocument extends Document {
       <html lang="en">
         <Head>
           {this.props.styleTags}
+          <link rel="stylesheet" href="/static/nprogress.css" />
+          <script src="/static/nprogress.js" />
         </Head>
         <body className="custom">
           <Main />

@@ -31,6 +31,9 @@ class MyApp extends App {
 
   componentDidMount() {
     configure(getRadiksConfig());
+    const { router } = this.props;
+    router.events.on('routeChangeStart', () => NProgress.start());
+    router.events.on('routeChangeComplete', () => NProgress.done());
   }
 
   render() {
