@@ -41,6 +41,15 @@ app.prepare().then(async () => {
     app.render(req, res, '/boards/show', params);
   });
 
+  server.get('/projects/new', (req, res) => {
+    app.render(req, res, '/projects/new');
+  });
+
+  server.get('/projects/:id', (req, res) => {
+    const { params } = req;
+    app.render(req, res, '/projects/show', params);
+  });
+
   server.get('*', (req, res) => handle(req, res));
 
   server.listen(port, (err) => {

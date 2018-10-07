@@ -15,16 +15,21 @@ const Nav = ({ currentUser, logout, router }) => (
       <NavLink>Kanstack</NavLink>
     </Link>
     {currentUser && (
-      <NavLink
-        ml="auto"
-        // href="#"
-        onClick={() => {
-          logout();
-          router.push('/');
-        }}
-      >
-        Logout
-      </NavLink>
+      <>
+        <Link href="/projects" passHref>
+          <NavLink ml="auto" mr={1}>Projects</NavLink>
+        </Link>
+        <NavLink
+          // ml="auto"
+          // href="#"
+          onClick={() => {
+            logout();
+            router.push('/');
+          }}
+        >
+          Logout
+        </NavLink>
+      </>
     )}
   </Toolbar>
 );

@@ -1,5 +1,5 @@
 import * as blockstack from 'blockstack';
-import { User } from 'radiks';
+import { User, GroupMembership } from 'radiks';
 
 import * as Constants from './constants';
 
@@ -33,10 +33,12 @@ const handleLogIn = () => async function innerHandleSignIn(dispatch) {
   dispatch(loggingIn());
   let userData = blockstack.loadUserData();
   if (userData) {
+    await GroupMembership.cacheKeys();
     dispatch(gotUserData((User.currentUser())));
   } else if (blockstack.isSignInPending()) {
     userData = await blockstack.handlePendingSignIn();
     const user = await User.createWithCurrentUser();
+    await GroupMembership.cacheKeys();
     dispatch(gotUserData((user)));
   }
 };

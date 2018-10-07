@@ -4,8 +4,6 @@ import { Container } from 'rebass';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Link from 'next/link';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 
 import RadiksActions from 'radiks/lib/redux/actions';
@@ -17,6 +15,7 @@ import Head from '../../components/head';
 import Nav from '../../components/nav';
 import { CardLink } from '../../components/card';
 import Type from '../../styled/typography';
+import Loading from '../../components/loading';
 
 class Projects extends React.Component {
   static propTypes = {
@@ -29,16 +28,7 @@ class Projects extends React.Component {
     this.props.fetchUserGroups();
   }
 
-  loading = () => (
-    <>
-      <Type.h1 textAlign="center" mt={4}>
-        <FontAwesomeIcon icon={faSpinner} spin size="2x" />
-      </Type.h1>
-      <Type.p textAlign="center" mt={4}>
-        Fetching your projects...
-      </Type.p>
-    </>
-  )
+  loading = () => (<Loading text="Fetching your projects..." />)
 
   projects() {
     return Object.values(this.props.projects).map(project => (
@@ -68,7 +58,7 @@ class Projects extends React.Component {
                 <Link href="/projects/new" passHref>
                   <CardLink>
                     <Type.p my={1} p={0} textAlign="center">
-                      Add a Board
+                      Add a Project
                     </Type.p>
                   </CardLink>
                 </Link>

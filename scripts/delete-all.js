@@ -20,7 +20,7 @@ const setup = async () => {
   await Promise.all(await deleteAll(db, 'Board'));
   await Promise.all(await deleteAll(db, 'Card'));
   await Promise.all(await deleteAll(db, 'GroupMembership'));
-  await Promise.all(await deleteAll(db, 'Project'));
+  await Promise.all(await deleteAll(db, 'UserGroup'));
 };
 
 setup().catch((e) => {

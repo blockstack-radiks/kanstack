@@ -26,9 +26,9 @@ class NewProject extends React.Component {
   }
 
   async componentDidMount() {
-    const membership = new GroupMembership({ id: '6abf1afc-9f2c-4147-bf13-eac8642a6da9' });
-    await membership.fetch();
-    console.log(membership);
+    // const membership = new GroupMembership({ id: '6abf1afc-9f2c-4147-bf13-eac8642a6da9' });
+    // await membership.fetch();
+    // console.log(membership);
   }
 
   save = async (evt) => {

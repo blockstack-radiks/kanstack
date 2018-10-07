@@ -21,6 +21,16 @@ import Type from '../../styled/typography';
 import Button from '../../styled/button';
 
 class NewBoard extends React.Component {
+  static getInitialProps(context) {
+    const { req } = context;
+    const { groupId } = (req || context).query;
+    console.log(groupId);
+
+    return {
+      groupId,
+    };
+  }
+
   state = {
     name: '',
     boardId: null,
@@ -29,10 +39,12 @@ class NewBoard extends React.Component {
   static propTypes = {
     saveModel: PropTypes.func.isRequired,
     boardsById: PropTypes.object,
+    groupId: PropTypes.string,
   }
 
   static defaultProps = {
     boardsById: {},
+    groupId: null,
   }
 
   componentWillReceiveProps(nextProps) {
@@ -46,7 +58,11 @@ class NewBoard extends React.Component {
     evt.preventDefault();
     console.log(this.state);
     const { name } = this.state;
-    const board = new Board({ name });
+    const attrs = { name };
+    if (this.props.groupId) {
+      attrs.userGroupId = this.props.groupId;
+    }
+    const board = new Board(attrs);
     console.log(board);
     this.setState({ boardId: board.id });
     this.props.saveModel(board);
