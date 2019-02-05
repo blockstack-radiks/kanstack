@@ -21,7 +21,6 @@ import { Header, ListHeader, AddCardButton } from '../../styled/board';
 
 class ShowBoard extends React.Component {
   static getInitialProps({ query }) {
-    console.log('board init props');
     return {
       boardId: query.id,
     };
@@ -29,32 +28,44 @@ class ShowBoard extends React.Component {
 
   static propTypes = {
     boardId: PropTypes.string.isRequired,
-    fetchModel: PropTypes.func.isRequired,
-    boardAttrs: PropTypes.object,
-    cards: PropTypes.array.isRequired,
-  }
-
-  static defaultProps = {
-    boardAttrs: {},
+    theme: PropTypes.object.isRequired,
+    // fetchModel: PropTypes.func.isRequired,
+    // boardAttrs: PropTypes.object,
+    // cards: PropTypes.array.isRequired,
   }
 
   state = {
     modalIsOpen: false,
     groupedCards: {},
+    // board: null,
+    boardAttrs: {},
   }
 
   async componentDidMount() {
-    const board = new Board({ id: this.props.boardId });
-    this.props.fetchModel(board);
+    // const faker = Board.db().get('not a real id');
+    // console.log(faker);
+    // const board = new Board({ id: this.props.boardId });
+    // this.props.fetchModel(board);
+    NProgress.start();
+    const board = await Board.findById(this.props.boardId);
+    console.log('board in component did mount', board);
+    this.setState({
+      // board: board,
+      boardAttrs: board.attrs,
+      allCards: board.cards,
+      groupedCards: this.groupedCards(board.cards),
+    }, () => {
+      NProgress.done();
+    });
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (!this.state.groupedCards.todo) {
-      this.setState({
-        groupedCards: this.groupedCards(nextProps.cards),
-      });
-    }
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   if (!this.state.groupedCards.todo) {
+  //     this.setState({
+  //       groupedCards: this.groupedCards(nextProps.cards),
+  //     });
+  //   }
+  // }
 
   saveListOrder = cards => cards.map((card, index) => new Promise(async (resolve, reject) => {
     try {
@@ -123,15 +134,18 @@ class ShowBoard extends React.Component {
     if (isNew) {
       groupedCards[card.attrs.status].unshift(card);
     } else {
-      const cardIndex = this.props.cards.findIndex(_card => card.id === _card.id);
-      this.props.cards[cardIndex] = card;
-      groupedCards = this.groupedCards(this.props.cards);
+      console.log(card);
+      const { allCards } = this.state;
+      const cardIndex = allCards.findIndex(_card => card._id === _card._id);
+      allCards[cardIndex] = card;
+      groupedCards = this.groupedCards(allCards);
     }
     this.setState({ groupedCards });
   }
 
   render() {
-    const { boardAttrs, theme } = this.props;
+    const { theme } = this.props;
+    const { boardAttrs } = this.state;
     const { name } = boardAttrs;
     const cardsByStatus = this.state.groupedCards;
     return (
@@ -179,15 +193,4 @@ class ShowBoard extends React.Component {
   }
 }
 
-const mapStateToProps = (state, props) => {
-  const board = selectModelById(state, 'Board', props.boardId);
-  return {
-    board,
-    boardAttrs: board && board.attrs ? board.attrs : {},
-    cards: board && board.cards ? board.cards : [],
-  };
-};
-
-const mapDispatchToProps = dispatch => bindActionCreators(Object.assign({}, RadiksActions), dispatch);
-
-export default connect(mapStateToProps, mapDispatchToProps)(withTheme(ShowBoard));
+export default withTheme(ShowBoard);

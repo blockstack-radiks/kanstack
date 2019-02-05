@@ -50,22 +50,29 @@ class NewBoard extends React.Component {
   componentWillReceiveProps(nextProps) {
     const board = nextProps.boardsById[this.state.boardId];
     if (board && !board.currentlySaving) {
-      Router.push(`/boards/${board.id}`);
+      Router.push(`/boards/${board._id}`);
     }
   }
 
-  save(evt) {
+  async save(evt) {
     evt.preventDefault();
-    console.log(this.state);
+    // console.log(this.state);
+    NProgress.start();
     const { name } = this.state;
     const attrs = { name };
     if (this.props.groupId) {
       attrs.userGroupId = this.props.groupId;
     }
     const board = new Board(attrs);
-    console.log(board);
-    this.setState({ boardId: board.id });
-    this.props.saveModel(board);
+    await board.save();
+    Router.push({
+      pathname: '/boards/show',
+      query: {
+        id: board._id,
+      },
+    }, `/boards/${board._id}`);
+    // this.setState({ boardId: board.id });
+    // this.props.saveModel(board);
   }
 
   render() {

@@ -15,18 +15,9 @@ const port = parseInt(process.env.PORT, 10) || 3000;
 app.prepare().then(async () => {
   const server = express();
 
-  server.use('/radiks', setup({
-    databaseName: 'kanstack',
-    databaseUrl: 'http://localhost:5984',
-    adminUser: process.env.COUCHDB_ADMIN,
-    adminPassword: process.env.COUCHDB_PASSWORD,
-  }));
+  const RadiksMiddleware = await setup();
 
-  server.use((req, res, _next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', '*');
-    _next();
-  });
+  server.use('/radiks', RadiksMiddleware);
 
   server.get('/manifest.json', (req, res) => {
     res.sendFile(path.join(__dirname, 'static', 'manifest.json'));
@@ -46,9 +37,13 @@ app.prepare().then(async () => {
   });
 
   server.get('/projects/:id', (req, res) => {
-    console.log('project#show');
     const { params } = req;
     app.render(req, res, '/projects/show', params);
+  });
+
+  server.get('/projects/:id/invite', (req, res) => {
+    const { params } = req;
+    app.render(req, res, '/projects/invite', params);
   });
 
   server.get('*', (req, res) => handle(req, res));

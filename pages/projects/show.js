@@ -51,14 +51,12 @@ class ShowProject extends React.Component {
     this.setState({ users });
   }
 
-  // async fetchBoards()
-
   users() {
     const { users } = this.state;
     return users.map(user => (
-      <Box width={1 / 3} my={2} key={user.id}>
+      <Box width={1 / 3} my={2} key={user._id} mx={3}>
         <Card textAlign="center">
-          {user.id}
+          {user._id}
         </Card>
       </Box>
     ));
@@ -69,7 +67,7 @@ class ShowProject extends React.Component {
       <>
         <Type.h3 mt={3}>Boards</Type.h3>
         <Flex flexDirection="row">
-          <Box width={[1 / 3]} my={2}>
+          <Box width={[1 / 3]} my={2} mx={3}>
             <Link
               passHref
               href={{
@@ -77,7 +75,7 @@ class ShowProject extends React.Component {
                 query: { groupId: this.props.groupId },
               }}
             >
-              <CardLink>
+              <CardLink textAlign="center">
                 New Board
               </CardLink>
             </Link>
@@ -96,6 +94,20 @@ class ShowProject extends React.Component {
         <Type.h3 mt={3}>Users</Type.h3>
         <Flex flexDirection="row">
           {this.users()}
+          <Box width={1 / 3} my={2} mx={3}>
+            <Link
+              passHref
+              href={{
+                pathname: '/projects/invite',
+                query: { id: this.props.groupId },
+              }}
+              as={`/projects/${this.props.groupId}/invite`}
+            >
+              <CardLink textAlign="center">
+                Invite a User
+              </CardLink>
+            </Link>
+          </Box>
         </Flex>
       </>
     );

@@ -18,7 +18,7 @@ class CardList extends React.Component {
   list() {
     const { cards } = this.props;
     return cards.map((card, index) => (
-      <Draggable key={card.id} draggableId={card.id} index={index}>
+      <Draggable key={card._id} draggableId={card._id} index={index}>
         {provided => (
           <Card
             innerRef={provided.innerRef}

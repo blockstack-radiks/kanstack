@@ -32,8 +32,8 @@ class Projects extends React.Component {
 
   projects() {
     return Object.values(this.props.projects).map(project => (
-      <Box width={1 / 3} mt={4} key={project.id} mx={3}>
-        <Link href={`/projects/${project.id}`} passHref>
+      <Box width={1 / 3} mt={4} key={project._id} mx={3}>
+        <Link href={`/projects/${project._id}`} passHref>
           <CardLink>
             <Type.p my={1} p={0} textAlign="center">
               {project.attrs.name}

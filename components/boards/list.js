@@ -18,16 +18,14 @@ class BoardsList extends React.Component {
   }
 
   async componentDidMount() {
-    const boards = await Board.fetchList({
-      createdBy: this.props.username,
-    });
+    const boards = await Board.fetchOwnList();
     this.setState({ boards });
   }
 
   boards() {
     return this.state.boards.map(board => (
-      <Box width={1 / 3} mt={4} key={board.id} mx={3}>
-        <Link href={`/boards/${board.id}`} passHref>
+      <Box width={1 / 3} mt={4} key={board._id} mx={3}>
+        <Link href={`/boards/${board._id}`} passHref>
           <CardLink>
             <Type.p my={1} p={0} textAlign="center">
               {board.attrs.name}

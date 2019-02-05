@@ -43,9 +43,9 @@ class NewProject extends React.Component {
     Router.push({
       pathname: '/projects/show',
       query: {
-        id: project.id,
+        id: project._id,
       },
-    }, `/projects/${project.id}`);
+    }, `/projects/${project._id}`);
 
     // console.log(project)
     // console.log(project.publicKey());
