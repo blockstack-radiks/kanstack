@@ -13,6 +13,8 @@ import Layout from '../../components/layout';
 import Type from '../../styled/typography';
 import Loading from '../../components/loading';
 import Card, { CardLink } from '../../components/card';
+import Project from '../../models/project';
+import Board from '../../models/board';
 
 class ShowProject extends React.Component {
   static propTypes = {
@@ -21,7 +23,8 @@ class ShowProject extends React.Component {
 
   state = {
     users: [],
-    userGroup: null,
+    project: null,
+    boards: [],
     isFetching: true,
   }
 
@@ -32,21 +35,25 @@ class ShowProject extends React.Component {
     };
   }
 
-  async componentWillMount() {
-    const userGroup = await UserGroup.find(this.props.groupId);
-    this.setState({ userGroup });
-    await this.fetchUsers(userGroup);
-    this.setState({ isFetching: false });
+  async componentDidMount() {
+    const project = await Project.find(this.props.groupId);
+    const boards = await Board.fetchList({ userGroupId: project._id });
+    await this.fetchUsers(project);
+    this.setState({
+      project,
+      boards,
+      isFetching: false,
+    });
   }
 
-  async fetchUsers(userGroup) {
-    const { members } = userGroup.attrs;
-    const ids = [];
-    members.forEach((member) => {
-      ids.push({ _id: member.username });
-    });
+  async fetchUsers(project) {
+    const { members } = project.attrs;
+    const ids = members.map(member => member.username);
+    // members.forEach((member) => {
+    //   ids.push({ _id: member.username });
+    // });
     const users = await User.fetchList({
-      $or: ids,
+      _id: ids.join(','),
     }, {}, { decrypt: false });
     this.setState({ users });
   }
@@ -63,10 +70,27 @@ class ShowProject extends React.Component {
   }
 
   boards() {
+    const { boards } = this.state;
     return (
       <>
         <Type.h3 mt={3}>Boards</Type.h3>
         <Flex flexDirection="row">
+          {boards.map(board => (
+            <Box width={[1 / 3]} my={2} mx={3} key={board._id}>
+              <Link
+                passHref
+                href={{
+                  pathname: '/boards/show',
+                  query: { id: board._id },
+                }}
+                as={`/boards/${board._id}`}
+              >
+                <CardLink textAlign="center">
+                  {board.attrs.name}
+                </CardLink>
+              </Link>
+            </Box>
+          ))}
           <Box width={[1 / 3]} my={2} mx={3}>
             <Link
               passHref
@@ -86,7 +110,7 @@ class ShowProject extends React.Component {
   }
 
   project() {
-    const project = this.state.userGroup;
+    const { project } = this.state;
     return (
       <>
         <Type.h2>{project.attrs.name}</Type.h2>
@@ -116,7 +140,7 @@ class ShowProject extends React.Component {
   render() {
     return (
       <Layout>
-        {/* {this.state.userGroup ? this.project() : <Loading text="Fetching your project..." /> } */}
+        {/* {this.state.project ? this.project() : <Loading text="Fetching your project..." /> } */}
         {this.state.isFetching ? <Loading text="Fetching your project..." /> : this.project() }
       </Layout>
     );

@@ -16,7 +16,13 @@ const Nav = ({ currentUser, logout, router }) => (
     </Link>
     {currentUser && (
       <>
-        <Link href="/projects" passHref>
+        <Link
+          href={{
+            pathname: '/projects',
+          }}
+          passHref
+          prefetch
+        >
           <NavLink ml="auto" mr={1}>Projects</NavLink>
         </Link>
         <NavLink

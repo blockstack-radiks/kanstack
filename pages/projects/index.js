@@ -10,6 +10,7 @@ import RadiksActions from 'radiks/lib/redux/actions';
 import {
   selectUserGroupsById,
 } from 'radiks/lib/redux/selectors';
+import Project from '../../models/project';
 
 import Head from '../../components/head';
 import Nav from '../../components/nav';
@@ -24,14 +25,23 @@ class Projects extends React.Component {
     projects: PropTypes.object.isRequired,
   }
 
-  componentWillMount() {
-    this.props.fetchUserGroups();
+  state = {
+    projects: null,
+  }
+
+  async componentDidMount() {
+    // this.props.fetchUserGroups();
+    const projects = await Project.myGroups();
+    this.setState({
+      projects,
+    });
   }
 
   loading = () => (<Loading text="Fetching your projects..." />)
 
   projects() {
-    return Object.values(this.props.projects).map(project => (
+    const { projects } = this.state;
+    return Object.values(projects).map(project => (
       <Box width={1 / 3} mt={4} key={project._id} mx={3}>
         <Link href={`/projects/${project._id}`} passHref>
           <CardLink>
@@ -45,13 +55,14 @@ class Projects extends React.Component {
   }
 
   render() {
+    const { projects } = this.state;
     return (
       <>
         <Head />
         <Nav />
         <Container>
           <Type.h1>Your Projects</Type.h1>
-          {this.props.isFetching ? this.loading() : (
+          {!projects ? this.loading() : (
             <Flex flexDirection="row">
               {this.projects()}
               <Box width={1 / 3} mt={4}>

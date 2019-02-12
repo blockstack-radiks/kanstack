@@ -20,7 +20,7 @@
     "history": "^4.7.2",
     "lodash": "^4.17.10",
     "lodash.merge": "^4.6.1",
-    "next": "^7.0.0",
+    "next": "^8.0.0",
     "polished": "^2.0.2",
     "pouchdb": "^7.0.0",
     "pouchdb-authentication": "^1.1.3",

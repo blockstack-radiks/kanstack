@@ -13,6 +13,10 @@ export default class Card extends Model {
       decrypted: true,
     },
     description: String,
+    userGroupId: {
+      type: String,
+      decrypted: true,
+    },
   }
 
   static defaults = {

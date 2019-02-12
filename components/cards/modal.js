@@ -40,12 +40,14 @@ class CardModal extends React.Component {
     selectedCard: PropTypes.object,
     // deselectModel: PropTypes.func.isRequired,
     deselectCard: PropTypes.func.isRequired,
+    userGroupId: PropTypes.string,
   }
 
   static defaultProps = {
     isOpen: false,
     // cardsById: {},
     selectedCard: null,
+    userGroupId: null,
   }
 
   state = defaultState
@@ -89,7 +91,7 @@ class CardModal extends React.Component {
 
   async save() {
     const { name, status } = this.state;
-    const card = this.props.selectedCard || new Card({ boardId: this.props.boardId });
+    const card = this.props.selectedCard || new Card({ boardId: this.props.boardId, userGroupId: this.props.userGroupId });
     const isNew = !this.props.selectedCard;
     this.setState({
       isSaving: true,

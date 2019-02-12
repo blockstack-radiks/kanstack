@@ -186,6 +186,7 @@ class ShowBoard extends React.Component {
           onClose={() => this.setState({ modalIsOpen: false })}
           onSave={(data, isNew) => this.newCard(data, isNew)}
           boardId={this.props.boardId}
+          userGroupId={this.state.boardAttrs.userGroupId}
         />
 
       </Layout>

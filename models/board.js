@@ -7,9 +7,9 @@ export default class Board extends Model {
   }
 
   async afterFetch() {
-    const { id } = this;
+    const { _id } = this;
     this.cards = await Card.fetchList({
-      boardId: id,
+      boardId: _id,
     }, {
       sort: ['order'],
     });

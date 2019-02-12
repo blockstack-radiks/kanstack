@@ -8,18 +8,25 @@ import { Card } from '../../components/card';
 import Input from '../../components/input';
 import Button from '../../styled/button';
 
+import Project from '../../models/project';
+
 export default class ProjectInvite extends React.Component {
   static getInitialProps({ query }) {
     return {
-      groupId: query.groupId,
+      id: query.id,
     };
   }
 
   state = {
     userResults: [],
     query: '',
-    selectedUserId: null,
+    invitation: null,
   }
+
+  // async componentDidMount() {
+  //   const { id } = this.props;
+  //   const project = await Project.find(id);
+  // }
 
   search = async (username) => {
     NProgress.start();
@@ -27,10 +34,21 @@ export default class ProjectInvite extends React.Component {
       username: {
         $regex: username,
       },
-    });
+    }, { decrypt: false });
     console.log(userResults);
     NProgress.done();
     this.setState({ userResults });
+  }
+
+  async sendInvite(username) {
+    NProgress.start();
+    const { id } = this.props;
+    const project = await Project.find(id);
+    window.project = project;
+    const invitation = await project.makeGroupMembership(username);
+    this.setState({ invitation }, () => {
+      NProgress.done();
+    });
   }
 
   users() {
@@ -40,7 +58,7 @@ export default class ProjectInvite extends React.Component {
           {user.attrs.username}
         </Box>
         <Box width={1 / 4}>
-          <Button width={1} display="block">Invite</Button>
+          <Button width={1} display="block" onClick={() => this.sendInvite(user.attrs.username)}>Invite</Button>
         </Box>
       </Flex>
     ));
@@ -57,6 +75,26 @@ export default class ProjectInvite extends React.Component {
         </Type.p>
         {this.users()}
       </>
+    );
+  }
+
+  inviteLink() {
+    const { invitation } = this.state;
+    if (!invitation) {
+      return null;
+    }
+    const url = `${document.location.origin}/activate-invite/${invitation._id}`;
+    return (
+      <p>
+        Send this link to accept the invite:
+        <br />
+        <Input
+          type="text"
+          mt={2}
+          value={url}
+          disabled
+        />
+      </p>
     );
   }
 
@@ -82,6 +120,7 @@ export default class ProjectInvite extends React.Component {
                 <Button mt={2} d="block" width="100%">Submit</Button>
               </form>
               {this.results()}
+              {this.inviteLink()}
             </Card>
           </Box>
         </Flex>

@@ -15,11 +15,15 @@ const port = parseInt(process.env.PORT, 10) || 3000;
 app.prepare().then(async () => {
   const server = express();
 
+  console.log(process.env.MONGODB_URL);
+
   const RadiksMiddleware = await setup();
 
   server.use('/radiks', RadiksMiddleware);
 
   server.get('/manifest.json', (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', '*');
     res.sendFile(path.join(__dirname, 'static', 'manifest.json'));
   });
 
@@ -44,6 +48,11 @@ app.prepare().then(async () => {
   server.get('/projects/:id/invite', (req, res) => {
     const { params } = req;
     app.render(req, res, '/projects/invite', params);
+  });
+
+  server.get('/activate-invite/:id', (req, res) => {
+    const { params } = req;
+    app.render(req, res, '/projects/activate-invite', params);
   });
 
   server.get('*', (req, res) => handle(req, res));
