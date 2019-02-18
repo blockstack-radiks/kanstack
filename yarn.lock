@@ -5505,10 +5505,10 @@ radiks-server@0.1.4:
     wolfy87-eventemitter "^5.2.5"
     yargs "^12.0.1"
 
-radiks@0.1.8:
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/radiks/-/radiks-0.1.8.tgz#3dab96151d5a2cf9cc4b91b431ff5e8cf41a496d"
-  integrity sha512-32wt10d2p+5rzOtrXYY3L0/9ZNA6DY29C5v/QZz2KpbQBjW/XrSN/MOn38JQ+DDnI533gADzyrvOw3u8sdhATQ==
+radiks@0.1.9:
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/radiks/-/radiks-0.1.9.tgz#3304295a3f0cb70952a659597de8ae9edf97052f"
+  integrity sha512-PCMwX0a2aZAGzb5qic3sUogivoObiwqEBKzEGOKP3tSMaqbaynnO/ppS1LmA4gdbACvwEIXLrEs2UJojbRsXMA==
   dependencies:
     blockstack "^18.0.4"
     faker "^4.1.0"

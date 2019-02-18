@@ -29,7 +29,7 @@
     "pouchdb-debug": "^7.0.0",
     "pouchdb-find": "^7.0.0",
     "prop-types": "^15.6.2",
-    "radiks": "0.1.8",
+    "radiks": "0.1.9",
     "radiks-server": "0.1.4",
     "react": "^16.4.2",
     "react-beautiful-dnd": "^9.0.2",
