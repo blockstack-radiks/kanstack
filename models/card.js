@@ -1,6 +1,8 @@
 import Model from 'radiks/lib/model';
 
 export default class Card extends Model {
+  static className = 'Card';
+
   static schema = {
     name: String,
     boardId: {

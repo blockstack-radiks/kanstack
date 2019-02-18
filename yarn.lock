@@ -2798,6 +2798,13 @@ expand-template@^1.0.2:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/expand-template/-/expand-template-1.1.1.tgz#981f188c0c3a87d2e28f559bc541426ff94f21dd"
 
+express-ws@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/express-ws/-/express-ws-4.0.0.tgz#dabd8dc974516418902a41fe6e30ed949b4d36c4"
+  integrity sha512-KEyUw8AwRET2iFjFsI1EJQrJ/fHeGiJtgpYgEWG3yDv4l/To/m3a2GaYfeGyB3lsWdvbesjF5XCMx+SVBgAAYw==
+  dependencies:
+    ws "^5.2.0"
+
 express@^4.16.3:
   version "4.16.3"
   resolved "https://registry.yarnpkg.com/express/-/express-4.16.3.tgz#6af8a502350db3246ecc4becf6b5a34d22f7ed53"
@@ -5475,8 +5482,10 @@ querystringify@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/querystringify/-/querystringify-1.0.0.tgz#6286242112c5b712fa654e526652bf6a13ff05cb"
 
-"radiks-server@file:../server":
-  version "0.1.2"
+radiks-server@0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/radiks-server/-/radiks-server-0.1.4.tgz#e30618a51a4fb8d54bab939f30df98d0d6a42568"
+  integrity sha512-dEUEGFvtKw9ftDPrJQ2pXbsA38evwHdGWFV7Cdvl/oEcMBEpU4/IaF/NNGLv87XDa2FDdjA0vsfGmFK+cnig+A==
   dependencies:
     "@awaitjs/express" "^0.1.4"
     blockstack "^18.0.4"
@@ -5486,16 +5495,20 @@ querystringify@~1.0.0:
     eslint-config-airbnb-base "^13.1.0"
     eslint-plugin-import "^2.14.0"
     express "^4.16.3"
+    express-ws "^4.0.0"
     fs-extra "^7.0.0"
     lodash "^4.17.11"
     mongodb "^3.1.8"
     query-to-mongo "^0.9.0"
     request "^2.88.0"
     request-promise "^4.2.2"
+    wolfy87-eventemitter "^5.2.5"
     yargs "^12.0.1"
 
-"radiks@file:../radiks":
-  version "0.1.5"
+radiks@0.1.8:
+  version "0.1.8"
+  resolved "https://registry.yarnpkg.com/radiks/-/radiks-0.1.8.tgz#3dab96151d5a2cf9cc4b91b431ff5e8cf41a496d"
+  integrity sha512-32wt10d2p+5rzOtrXYY3L0/9ZNA6DY29C5v/QZz2KpbQBjW/XrSN/MOn38JQ+DDnI533gADzyrvOw3u8sdhATQ==
   dependencies:
     blockstack "^18.0.4"
     faker "^4.1.0"
@@ -5503,6 +5516,7 @@ querystringify@~1.0.0:
     qs "^6.5.2"
     query-string "^6.2.0"
     uuid "^3.3.2"
+    wolfy87-eventemitter "^5.2.5"
 
 raf-schd@^4.0.0:
   version "4.0.0"
@@ -7199,6 +7213,11 @@ wif@^2.0.1, wif@^2.0.6:
   dependencies:
     bs58check "<3.0.0"
 
+wolfy87-eventemitter@^5.2.5:
+  version "5.2.5"
+  resolved "https://registry.yarnpkg.com/wolfy87-eventemitter/-/wolfy87-eventemitter-5.2.5.tgz#e7af2adbb84e481c65edeb2a2e01032c8ff1b88f"
+  integrity sha512-1Og5JkuMNZfZcDn76HM1ktUqG8MOMWKpaGdExM1pcTloUNSBkx4Mti3/jRKSTt1vI3P7S8BTkFogqMbc7m3A7Q==
+
 wordwrap@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/wordwrap/-/wordwrap-1.0.0.tgz#27584810891456a4171c8d0226441ade90cbcaeb"
@@ -7272,6 +7291,13 @@ ws@6.1.2:
   version "6.1.2"
   resolved "https://registry.yarnpkg.com/ws/-/ws-6.1.2.tgz#3cc7462e98792f0ac679424148903ded3b9c3ad8"
   integrity sha512-rfUqzvz0WxmSXtJpPMX2EeASXabOrSMk1ruMOV3JBTBjo4ac2lDjGGsbQSyxj8Odhw5fBib8ZKEjDNvgouNKYw==
+  dependencies:
+    async-limiter "~1.0.0"
+
+ws@^5.2.0:
+  version "5.2.2"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-5.2.2.tgz#dffef14866b8e8dc9133582514d1befaf96e980f"
+  integrity sha512-jaHFD6PFv6UgoIVda6qZllptQsMlDEJkTQcybzzXDYM1XO9Y8em691FGMPmM46WGyLU4z9KMgQN+qrux/nhlHA==
   dependencies:
     async-limiter "~1.0.0"
 

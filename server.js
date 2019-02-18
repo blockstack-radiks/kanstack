@@ -1,6 +1,7 @@
 const express = require('express');
 const next = require('next');
 const path = require('path');
+const expressWS = require('express-ws');
 require('dotenv').config();
 
 const { setup } = require('radiks-server');
@@ -14,8 +15,7 @@ const port = parseInt(process.env.PORT, 10) || 3000;
 
 app.prepare().then(async () => {
   const server = express();
-
-  console.log(process.env.MONGODB_URL);
+  expressWS(server);
 
   const RadiksMiddleware = await setup();
 

@@ -1,15 +1,9 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
 import { Flex, Box } from 'grid-styled';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { DragDropContext } from 'react-beautiful-dnd';
-import RadiksActions from 'radiks/lib/redux/actions';
-import {
-  selectModelById,
-} from 'radiks/lib/redux/selectors';
 import { withTheme } from 'styled-components';
 
 import Layout from '../../components/layout';
@@ -17,6 +11,7 @@ import CardModal from '../../components/cards/modal';
 import CardList from '../../components/cards/list';
 
 import Board from '../../models/board';
+import Card from '../../models/card';
 import { Header, ListHeader, AddCardButton } from '../../styled/board';
 
 class ShowBoard extends React.Component {
@@ -29,43 +24,30 @@ class ShowBoard extends React.Component {
   static propTypes = {
     boardId: PropTypes.string.isRequired,
     theme: PropTypes.object.isRequired,
-    // fetchModel: PropTypes.func.isRequired,
-    // boardAttrs: PropTypes.object,
-    // cards: PropTypes.array.isRequired,
   }
 
   state = {
     modalIsOpen: false,
     groupedCards: {},
-    // board: null,
     boardAttrs: {},
   }
 
   async componentDidMount() {
-    // const faker = Board.db().get('not a real id');
-    // console.log(faker);
-    // const board = new Board({ id: this.props.boardId });
-    // this.props.fetchModel(board);
     NProgress.start();
     const board = await Board.findById(this.props.boardId);
-    console.log('board in component did mount', board);
     this.setState({
-      // board: board,
       boardAttrs: board.attrs,
       allCards: board.cards,
       groupedCards: this.groupedCards(board.cards),
     }, () => {
       NProgress.done();
     });
+    Card.addStreamListener(this.newCardListener.bind(this));
   }
 
-  // componentWillReceiveProps(nextProps) {
-  //   if (!this.state.groupedCards.todo) {
-  //     this.setState({
-  //       groupedCards: this.groupedCards(nextProps.cards),
-  //     });
-  //   }
-  // }
+  componentWillUnmount() {
+    Card.removeStreamListener(this.newCardListener);
+  }
 
   saveListOrder = cards => cards.map((card, index) => new Promise(async (resolve, reject) => {
     try {
@@ -125,16 +107,35 @@ class ShowBoard extends React.Component {
     return grouped;
   }
 
+  newCardListener(card) {
+    // console.log('new card in boards#show', card, this.state.allCards);
+    if (card.attrs.boardId !== this.props.boardId) {
+      return true;
+    }
+    const { allCards } = this.state;
+    let { groupedCards } = this.state;
+    const cardIndex = allCards.findIndex(_card => card._id === _card._id);
+    if (cardIndex !== -1) {
+      allCards[cardIndex] = card;
+      groupedCards = this.groupedCards(allCards);
+    } else {
+      groupedCards[card.attrs.status].unshift(card);
+      allCards.unshift(card);
+    }
+    this.setState({ groupedCards, allCards });
+    return true;
+  }
+
   newCard(card, isNew) {
     this.setState({
       modalIsOpen: false,
     });
-    console.log('newCard', isNew, card);
+    // console.log('newCard', isNew, card);
     let { groupedCards } = this.state;
     if (isNew) {
       groupedCards[card.attrs.status].unshift(card);
     } else {
-      console.log(card);
+      // console.log(card);
       const { allCards } = this.state;
       const cardIndex = allCards.findIndex(_card => card._id === _card._id);
       allCards[cardIndex] = card;
