@@ -108,7 +108,7 @@ class ShowBoard extends React.Component {
   }
 
   newCardListener(card) {
-    // console.log('new card in boards#show', card, this.state.allCards);
+    console.log('new card in boards#show', card, this.state.allCards);
     if (card.attrs.boardId !== this.props.boardId) {
       return true;
     }
