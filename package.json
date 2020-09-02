@@ -20,7 +20,7 @@
     "axios": "^0.16.1",
     "blockstack": "18.2.1",
     "bootstrap-sass": "^3.3.7",
-    "bootstrap-vue": "^2.0.0-rc.6",
+    "bootstrap-vue": "^2.0.0-rc.12",
     "dexie": "^2.0.2",
     "jade": "^1.11.0",
     "moment": "^2.22.0",
