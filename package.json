@@ -17,7 +17,7 @@
     "@fortawesome/fontawesome-free-solid": "^5.0.9",
     "@fortawesome/vue-fontawesome": "^0.0.22",
     "add": "^2.0.6",
-    "axios": "^0.16.1",
+    "axios": "^0.21.1",
     "blockstack": "18.2.1",
     "bootstrap-sass": "^3.3.7",
     "bootstrap-vue": "^2.0.0-rc.6",
