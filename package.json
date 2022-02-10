@@ -24,7 +24,7 @@
     "dexie": "^2.0.2",
     "jade": "^1.11.0",
     "moment": "^2.22.0",
-    "node-sass": "^4.5.3",
+    "node-sass": "^7.0.0",
     "sass-loader": "^6.0.5",
     "simplemde": "^1.11.2",
     "underscore": "^1.8.3",
