@@ -21,7 +21,7 @@
     "blockstack": "18.2.1",
     "bootstrap-sass": "^3.3.7",
     "bootstrap-vue": "^2.0.0-rc.6",
-    "dexie": "^2.0.2",
+    "dexie": "^3.2.2",
     "jade": "^1.11.0",
     "moment": "^2.22.0",
     "node-sass": "^4.5.3",
